@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACCA BT Final Mock Exam - Full Version</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --success: #27ae60;
+            --error: #c0392b;
+            --bg: #f4f7f6;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: #333;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 25px;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .intro-text { 
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+        .section-header {
+            background-color: #ecf0f1;
+            padding: 10px 15px;
+            margin: 30px -20px 20px -20px;
+            border-left: 5px solid var(--accent);
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .question-card {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .question-title {
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        .question-meta {
+            font-size: 0.8em;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+        .options label {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .options label:hover {
+            border-color: var(--accent);
+            background: #fbfbfb;
+        }
+        input[type="radio"], input[type="checkbox"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+        button#submit-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background-color: var(--success);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 40px;
+            transition: background 0.3s;
+        }
+        button#submit-btn:hover {
+            background-color: #219150;
+        }
+        .result-box {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background-color: #dff0d8;
+            border: 2px solid #d6e9c6;
+            border-radius: 8px;
+            color: #3c763d;
+            text-align: center;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+        .feedback {
+            margin-top: 15px;
+            font-size: 0.95em;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+            border-left: 5px solid transparent;
+        }
+        .correct {
+            background-color: #e8f8f5;
+            color: #0e6251;
+            border-left-color: var(--success);
+        }
+        .incorrect {
+            background-color: #fdedec;
+            color: #922b21;
+            border-left-color: var(--error);
+        }
+        .explanation {
+            font-style: italic;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+        .highlight {
+            background-color: #ffffcc;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .show-answer-btn {
+            margin-top: 10px;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--accent);
+            color: white;
+            cursor: pointer;
+            font-size: 0.95em;
+            opacity: 0.9;
+            transition: opacity 0.2s, background 0.2s;
+        }
+        .show-answer-btn:hover:enabled {
+            opacity: 1;
+            background-color: #2b7db8;
+        }
+        .show-answer-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .panel {
+            margin-top: 25px;
+            padding: 18px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: #fafafa;
+        }
+        .panel h3 {
+            margin: 0 0 10px 0;
+            color: var(--primary);
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .history-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        .wrong-answer {
+            margin-bottom: 12px;
+            padding: 10px;
+            border-radius: 6px;
+            background: #fff7f7;
+            border: 1px solid #f3d6d6;
+        }
+        .controls-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .controls-row select {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>ACCA BT Final Mock Exam</h1>
+    <p class="intro-text">Comprehensive Interactive Practice • 45+ Questions</p>
+</header>
+
+<div class="container">
+    <div class="controls-row">
+        <label for="mock-selector"><strong>Select Mock:</strong></label>
+        <select id="mock-selector" onchange="switchMock(this.value)"></select>
+    </div>
+
+    <div id="quiz-area">
+        </div>
+
+    <button id="submit-btn" onclick="calculateScore()">Submit Answers & View Results</button>
+
+    <div id="result-display" class="result-box"></div>
+    <div id="analytics" class="panel"></div>
+    <div id="history" class="panel"></div>
+    <div id="wrong-answers" class="panel"></div>
+</div>
+
+<script>
+    // --- Quiz library (add more mocks here) ---
+    const quizLibrary = {
+        "acca-bt-mock-1": {
+            title: "ACCA BT Final Mock - Set 1",
+            questions: [
+                {
+                    section: "Section A: Objective Questions",
+                    id: 1,
+                    question: "Q1: If the exchange rate falls between the British Pound and the Euro (Pound weakens), which of the following statements are TRUE?",
+                    type: "checkbox",
+                    options: [
+                        "Demand for imports from the Eurozone increases",
+                        "Demand for exports to the Eurozone increases",
+                        "Demand for imports from the Eurozone decreases",
+                        "Demand for exports to the Eurozone decreases"
+                    ],
+                    answer: [1, 2], 
+                    explanation: "A weaker Pound makes UK exports cheaper (increasing demand) and Eurozone imports more expensive (decreasing demand)."
+                },
+                {
+                    id: 2,
+                    question: "Q2: With regards to money laundering... The penalty for failing to disclose knowledge or suspicion is up to how many years in prison?",
+                    type: "radio",
+                    options: ["2", "5", "14", "Unlimited"],
+                    answer: [1],
+                    explanation: "Failure to report is 5 years. Tipping off is 2 years. Laundering itself is 14 years."
+                },
+                {
+                    id: 3,
+                    question: "Q3: Interview questions that begin with 'Have you...' or 'Did you...' are known as what type of question?",
+                    type: "radio",
+                    options: ["Leading", "Open", "Closed"],
+                    answer: [2],
+                    explanation: "Closed questions encourage a short 'Yes' or 'No' answer."
+                },
+                {
+                    id: 4,
+                    question: "Q4: Which TWO of the following selection tests are NOT types of aptitude test?",
+                    type: "checkbox",
+                    options: ["Numerical reasoning test", "Personality test", "Clerical ability", "Intelligence test"],
+                    answer: [1, 3],
+                    explanation: "Aptitude tests measure specific skills. Personality tests measure traits. Intelligence tests measure general cognitive ability (g-factor), often distinguished from specific aptitude in this syllabus."
+                },
+                {
+                    id: 5,
+                    question: "Q5: Which term describes the skills required for a job to be carried out by a person?",
+                    type: "radio",
+                    options: ["Job analysis", "Job description", "Job specification"],
+                    answer: [2],
+                    explanation: "Job Specification details the person (skills/attributes). Job Description details the tasks."
+                },
+                {
+                    id: 6,
+                    question: "Q6: Shareholders are responsible for determining the duties of internal auditors. True or False?",
+                    type: "radio",
+                    options: ["True", "False"],
+                    answer: [1],
+                    explanation: "False. Internal audit scope is determined by management or the Audit Committee. Shareholders appoint *External* auditors."
+                },
+                {
+                    id: 7,
+                    question: "Q7: Who argued that the objectives of a company emerge as a consensus of the differing views of stakeholders?",
+                    type: "radio",
+                    options: ["Mendelow", "John Lewis", "Cyert and March"],
+                    answer: [2],
+                    explanation: "Cyert and March (Behavioral Theory of the Firm)."
+                },
+                {
+                    id: 8,
+                    question: "Q8: Peter knows everyone. His team asks him to check his address book for contacts. What Belbin role is this?",
+                    type: "radio",
+                    options: ["Specialist", "Resource Investigator", "Monitor Evaluator", "Completer Finisher"],
+                    answer: [1],
+                    explanation: "Resource Investigators are the networkers who go outside the team to bring back ideas and contacts."
+                },
+                {
+                    id: 9,
+                    question: "Q9: Tuckman's Team Stages - Match 'Team members become interdependent' to a stage:",
+                    type: "radio",
+                    options: ["Forming", "Storming", "Norming", "Performing"],
+                    answer: [3],
+                    explanation: "Interdependence and high productivity characterize the Performing stage."
+                },
+                {
+                    id: 10,
+                    question: "Q10: Maslow - How is 'Security / Lack of threats' categorized?",
+                    type: "radio",
+                    options: ["Social", "Safety", "Esteem", "Self-actualization"],
+                    answer: [1],
+                    explanation: "Security falls under Safety needs."
+                },
+                {
+                    id: 11,
+                    question: "Q11: In the UK, what states that the EU has the force of law in member states?",
+                    type: "radio",
+                    options: ["An Act of Parliament", "The Treaty on the Functioning of the EU"],
+                    answer: [0],
+                    explanation: "While Treaties generate the law, in the UK (dualist state), an Act of Parliament (European Communities Act 1972) was required to give it force."
+                },
+                {
+                    id: 12,
+                    question: "Q12: Douglas McGregor Theory X - Which is a belief of a Theory X Manager?",
+                    type: "radio",
+                    options: ["Employees seek responsibility", "The average employee dislikes work", "It is natural to make an effort"],
+                    answer: [1],
+                    explanation: "Theory X assumes workers are lazy and dislike work."
+                },
+                {
+                    id: 13,
+                    question: "Q13: PEST Analysis - Growth, Monetary Policy, Taxation refer to:",
+                    type: "radio",
+                    options: ["Political", "Economic", "Social", "Technological"],
+                    answer: [1],
+                    explanation: "These are core Economic factors."
+                },
+                {
+                    id: 15,
+                    question: "Q15: Kolb - A combination of 'watching' and 'thinking' produces which learning style?",
+                    type: "radio",
+                    options: ["Accommodating", "Diverging", "Converging", "Assimilating"],
+                    answer: [3],
+                    explanation: "Reflective Observation (Watching) + Abstract Conceptualization (Thinking) = Assimilating."
+                },
+                {
+                    id: 16,
+                    question: "Q16: SMART objectives - 'R' stands for:",
+                    type: "radio",
+                    options: ["Realistic", "Reasonable", "Representative"],
+                    answer: [0],
+                    explanation: "Realistic (sometimes Relevant, but Realistic is the standard option here)."
+                },
+                {
+                    id: 18,
+                    question: "Q18: Who distinguished between acts of leadership and authority (acceptance of leader)?",
+                    type: "radio",
+                    options: ["Mintzberg", "Heifetz", "Kotter"],
+                    answer: [1],
+                    explanation: "Heifetz distinguished between technical authority and adaptive leadership."
+                },
+                {
+                    id: 20,
+                    question: "Q20: Who described culture as 'the collection of traditions, values, policies... a pervasive context'?",
+                    type: "radio",
+                    options: ["Schein", "Schwartz and Davis", "Mullins", "McLean and Marshall"],
+                    answer: [3],
+                    explanation: "This is the standard definition by McLean and Marshall often cited in ACCA texts."
+                },
+                {
+                    id: 21,
+                    question: "Q21: Handy's 'Power' culture characteristics (Select TWO):",
+                    type: "checkbox",
+                    options: ["Lots of rules", "Quick to make decisions", "Lots of bureaucracy", "Succession problems"],
+                    answer: [1, 3],
+                    explanation: "Power culture (The Web/Zeus) depends on the center. It is fast but vulnerable if the leader leaves."
+                },
+                {
+                    id: 22,
+                    question: "Q22: Which theory states an organisation must align the interests of the agents to the principals?",
+                    type: "radio",
+                    options: ["Accommodation theory", "Agency theory", "Corporate theory"],
+                    answer: [1],
+                    explanation: "Agency theory deals with the Principal-Agent problem."
+                },
+                {
+                    id: 23,
+                    question: "Q23: The head of Treasury reports directly to the shareholders. True or False?",
+                    type: "radio",
+                    options: ["True", "False"],
+                    answer: [1],
+                    explanation: "False. They typically report to the Finance Director (CFO)."
+                },
+                {
+                    id: 24,
+                    question: "Q24: Which TWO are organisations NOT formed with the intention of generating a profit?",
+                    type: "checkbox",
+                    options: ["Private Limited Company", "Public Limited Company", "Public Sector Organisation", "Non-governmental Organisations"],
+                    answer: [2, 3],
+                    explanation: "Public sector and NGOs exist for service/social causes, not profit maximization."
+                },
+                {
+                    id: 25,
+                    question: "Q25: Which stakeholder group do Non-Executive Directors (NEDs) belong to?",
+                    type: "radio",
+                    options: ["Internal", "Connected", "External"],
+                    answer: [0],
+                    explanation: "NEDs are members of the board, so they are Internal stakeholders, even though they are independent."
+                },
+                {
+                    id: 26,
+                    question: "Q26: The overall responsibility of compliance with Health and Safety lies with whom?",
+                    type: "radio",
+                    options: ["Employers (The Company)", "Employees", "I and II"],
+                    answer: [0],
+                    explanation: "While everyone has duties, the *overall* legal responsibility lies with the Employer."
+                },
+                {
+                    id: 27,
+                    question: "Q27: If household incomes rise and demand for a good falls, it is a:",
+                    type: "radio",
+                    options: ["Normal good", "Inferior good"],
+                    answer: [1],
+                    explanation: "Inferior goods (like budget bread) are replaced by better goods when income rises."
+                },
+                {
+                    id: 28,
+                    question: "Q28: Leavitt's Communication Patterns - A 5-member team where each communicates with only two others?",
+                    type: "radio",
+                    options: ["Circle", "Chain", "Y", "Wheel"],
+                    answer: [0],
+                    explanation: "In a Circle, everyone talks only to their immediate left and right neighbors."
+                },
+                {
+                    id: 29,
+                    question: "Q29: Wrongful Dismissal (Select TWO correct statements):",
+                    type: "checkbox",
+                    options: [
+                        "Minimum period of employment required",
+                        "Can claim damages for breach of contract (notice period)",
+                        "Only full-time employees can claim",
+                        "Damages usually calculated by notice period difference"
+                    ],
+                    answer: [1, 3],
+                    explanation: "Wrongful dismissal is a contract law issue (breach of notice terms). There is no minimum service required."
+                },
+                {
+                    id: 30,
+                    question: "Q30: Joely bought hair straighteners. Pin missing. Returned immediately. Who is responsible?",
+                    type: "radio",
+                    options: [
+                        "'AIR' (Manufacturer) is responsible for partial refund",
+                        "J Ltd (Retailer) is responsible for partial refund",
+                        "'AIR' is responsible for replacement",
+                        "J Ltd is responsible for full refund/replacement"
+                    ],
+                    answer: [3],
+                    explanation: "Under consumer law, the contract is with the Retailer (J Ltd). Since she returned it immediately (short term right to reject), she is entitled to a full refund or replacement from the shop."
+                },
+                {
+                    id: 31,
+                    question: "Q31: Workforce 84.2m, Unemployed 2.1m. What is the unemployment rate?",
+                    type: "radio",
+                    options: ["1.50%", "2.00%", "2.50%"],
+                    answer: [2],
+                    explanation: "(2.1 / 84.2) * 100 = 2.494% -> Rounds to 2.50%."
+                },
+                {
+                    id: 33,
+                    question: "Q33: Product X has Substitute Z and Complement Y. Which shifts X demand left (decrease)? (Select TWO)",
+                    type: "checkbox",
+                    options: [
+                        "Increase in price of Substitute Z",
+                        "Decrease in price of Substitute Z",
+                        "Increase in price of Complement Y",
+                        "Decrease in price of Complement Y"
+                    ],
+                    answer: [1, 2],
+                    explanation: "If Substitute Z gets cheaper, people buy Z instead of X (X demand drops). If Complement Y gets expensive, people stop buying Y, so they don't need X (X demand drops)."
+                },
+                {
+                    id: 34,
+                    question: "Q34: Which statement is TRUE?",
+                    type: "radio",
+                    options: [
+                        "Demand for inferior goods rises as income rises",
+                        "Demand for luxury goods falls as household incomes fall",
+                        "Demand for a product will fall if cost of its complement falls"
+                    ],
+                    answer: [1],
+                    explanation: "Luxury goods are income elastic; if income drops, demand for luxuries drops significantly."
+                },
+                {
+                    id: 35,
+                    question: "Q35: 'Managers can communicate quickly with employees' - Wide or Narrow span?",
+                    type: "radio",
+                    options: ["Wide span of control", "Narrow span of control"],
+                    answer: [0],
+                    explanation: "A wide span implies a Flat structure. Flat structures have fewer vertical layers, so communication between top and bottom is faster."
+                },
+                {
+                    id: 37,
+                    question: "Q37: Corporate Governance - Which is NOT true for a listed company?",
+                    type: "radio",
+                    options: [
+                        "Must comply or explain",
+                        "Aims should be maximisation of profit",
+                        "Directors re-election at least every five years",
+                        "CEO and Chair cannot be same person"
+                    ],
+                    answer: [2],
+                    explanation: "The UK Code requires annual re-election for FTSE 350 (or every 3 years generally). 'At least every 5 years' is too long."
+                },
+                {
+                    id: 38,
+                    question: "Q38: Preparing budgets is a responsibility of:",
+                    type: "radio",
+                    options: ["Financial Accounting", "Management Accounting", "Treasury"],
+                    answer: [1],
+                    explanation: "Budgeting and forecasting are core Management Accounting functions."
+                },
+                {
+                    id: 39,
+                    question: "Q39: Collection of programs to enter/select data in a database?",
+                    type: "radio",
+                    options: ["DBMS", "EIS", "Spreadsheet"],
+                    answer: [0],
+                    explanation: "Database Management System."
+                },
+                {
+                    id: 40,
+                    question: "Q40: Price rises $32 to $36 (+12.5%). Demand falls 4500 to 3600 (-20%). Calculate PED.",
+                    type: "radio",
+                    options: ["-1.6", "-2.0", "+2.0"],
+                    answer: [0],
+                    explanation: "PED = %Change Q / %Change P = -20% / 12.5% = -1.6."
+                },
+                {
+                    id: 41,
+                    question: "Q41: Mintzberg - Who advises the operating core (standardisation)?",
+                    type: "radio",
+                    options: ["Strategic apex", "Middle line", "Technostructure"],
+                    answer: [2],
+                    explanation: "The Technostructure (analysts, planners) standardizes processes."
+                },
+                {
+                    id: 43,
+                    question: "Q43: External auditors are appointed by:",
+                    type: "radio",
+                    options: ["Chief Executive", "Shareholders", "Finance Director"],
+                    answer: [1],
+                    explanation: "Shareholders appoint them at the AGM."
+                },
+                {
+                    id: 44,
+                    question: "Q44: Jack advises new recruits on indirect work topics. He is a:",
+                    type: "radio",
+                    options: ["Coach", "Mentor", "Counsellor"],
+                    answer: [1],
+                    explanation: "Mentors provide long-term, holistic career support. Coaches focus on specific job tasks."
+                },
+                {
+                    id: 46,
+                    question: "Q46: Data Protection - Preventing 'unauthorised disclosure' on laptops. Best TWO measures:",
+                    type: "checkbox",
+                    options: ["Off-site backups", "Training users", "Encryption", "Validation"],
+                    answer: [1, 2],
+                    explanation: "Encryption prevents data being read if stolen. Training prevents negligence. Backups help availability, not confidentiality."
+                },
+                {
+                    section: "Section B: Multi-Task Questions",
+                    id: 47,
+                    question: "Q47 (Handy Culture): Identify the feature of Power Culture:",
+                    type: "radio",
+                    options: ["Succession problems", "Matrix structure", "Lots of rules"],
+                    answer: [0],
+                    explanation: "Power culture revolves around one person (Zeus), causing succession issues."
+                },
+                {
+                    id: 48,
+                    question: "Q48 (Committees): 'Review of the financial statements' is done by:",
+                    type: "radio",
+                    options: ["Audit Committee", "Remuneration Committee", "Nomination Committee"],
+                    answer: [0],
+                    explanation: "The Audit Committee oversees financial reporting and the external audit."
+                },
+                {
+                    id: 49,
+                    question: "Q49 (Communication): Which method provides a 'Permanent record'?",
+                    type: "radio",
+                    options: ["Conversation", "Report", "Phone call"],
+                    answer: [1],
+                    explanation: "Written reports provide a permanent trail."
+                },
+                {
+                    id: 50,
+                    question: "Q50 (Conflict): Advantage of arguments/conflict? (Select TWO)",
+                    type: "checkbox",
+                    options: ["Different solutions discussed", "Encourages defensive behavior", "Focus on individual contributions"],
+                    answer: [0, 2],
+                    explanation: "Constructive conflict avoids groupthink and brings different solutions to light."
+                },
+                {
+                    id: 51,
+                    question: "Q51 (Kotter): 'Inspiring and motivating staff to translate vision into action' is:",
+                    type: "radio",
+                    options: ["Leadership", "Management"],
+                    answer: [0],
+                    explanation: "Management deals with complexity/order. Leadership deals with change/vision/motivation."
+                },
+                {
+                    id: 52,
+                    question: "Q52 (Ashridge Styles): MD communicates decisions already made by HQ. Style is:",
+                    type: "radio",
+                    options: ["Tells", "Sells", "Consults", "Joins"],
+                    answer: [0],
+                    explanation: "Decisions are already made and just communicated: Tells."
+                },
+                {
+                    id: 53,
+                    question: "Q53 (Ethics): What is the course of action of 'last resort' for an ethical dilemma?",
+                    type: "radio",
+                    options: ["Consultation with board", "Resignation", "Legal advice"],
+                    answer: [1],
+                    explanation: "If all else fails, the accountant must resign."
+                },
+                {
+                    id: 54,
+                    question: "Q54 (Personal Qualities): Which TWO are personal qualities required of an accountant?",
+                    type: "checkbox",
+                    options: ["Timeliness", "Courtesy", "Independence", "Accountability"],
+                    answer: [0, 1],
+                    explanation: "Timeliness and Courtesy are personal qualities. Independence is a professional ethical principle."
+                },
+                {
+                    id: 56,
+                    question: "Q56 (Monetary Policy): Which TWO are NOT aspects of monetary policy?",
+                    type: "checkbox",
+                    options: ["Public sector borrowing", "Taxation", "Interest rates", "Exchange rates"],
+                    answer: [0, 1],
+                    explanation: "Borrowing and Taxation are Fiscal Policy (Government). Interest rates are Monetary Policy (Central Bank)."
+                }
+            ]
+        },
+        "acca-bt-mock-2": {
+            title: "ACCA BT Final Mock - Set 2",
+            questions: [
+                {
+                    id: 1,
+                    question: "If the exchange rate falls between the British Pound and the Euro (Pound weakens), which of the following statements are TRUE?",
+                    type: "checkbox",
+                    options: [
+                        "Demand for imports from the Eurozone increases",
+                        "Demand for exports to the Eurozone increases",
+                        "Demand for imports from the Eurozone decreases",
+                        "Demand for exports to the Eurozone decreases"
+                    ],
+                    answer: [1, 2],
+                    explanation: "A weaker currency makes exports cheaper for foreign buyers (increasing demand) and imports more expensive (decreasing demand). [cite: 86-94]"
+                },
+                {
+                    id: 2,
+                    question: "The penalty for failing to disclose knowledge or suspicion of money laundering is up to how many years in prison?",
+                    type: "radio",
+                    options: ["2", "5", "14", "Unlimited"],
+                    answer: [1],
+                    explanation: "Failure to report is 5 years. Tipping off is 2 years. Laundering itself is 14 years. [cite: 96-101]"
+                },
+                {
+                    id: 3,
+                    question: "Questions that begin with 'Have you...' or 'Did you...' are known as what type of question?",
+                    type: "radio",
+                    options: ["Leading", "Open", "Closed"],
+                    answer: [2],
+                    explanation: "Closed questions typically elicit a 'Yes' or 'No' answer. [cite: 119-124]"
+                },
+                {
+                    id: 4,
+                    question: "Which TWO of the following selection tests are NOT types of aptitude test?",
+                    type: "checkbox",
+                    options: ["Numerical reasoning test", "Personality test", "Clerical ability", "Intelligence test"],
+                    answer: [1, 3],
+                    explanation: "Aptitude tests measure specific skills. Personality and Intelligence (IQ) tests measure traits and general cognitive ability. [cite: 128-138]"
+                },
+                {
+                    id: 5,
+                    question: "Which term describes the skills required for a job to be carried out by a person?",
+                    type: "radio",
+                    options: ["Job analysis", "Job description", "Job specification"],
+                    answer: [2],
+                    explanation: "A Job Specification details the person (skills, attributes). A Job Description details the role (tasks). [cite: 157-160]"
+                },
+                {
+                    id: 6,
+                    question: "Shareholders are responsible for determining the duties of internal auditors. True or False?",
+                    type: "radio",
+                    options: ["True", "False"],
+                    answer: [1],
+                    explanation: "False. Internal audit scope is determined by management or the Audit Committee. Shareholders appoint External auditors. [cite: 172-175]"
+                },
+                {
+                    id: 7,
+                    question: "Who argued that the objectives of a company emerge as a consensus of the differing views of the stakeholders?",
+                    type: "radio",
+                    options: ["Mendelow", "John Lewis", "Cyert and March"],
+                    answer: [2],
+                    explanation: "Cyert and March proposed the behavioral theory of the firm involving stakeholder consensus. [cite: 181-185]"
+                },
+                {
+                    id: 8,
+                    question: "Peter is the team member who knows everyone and finds contacts. What Belbin role is this?",
+                    type: "radio",
+                    options: ["Specialist", "Resource Investigator", "Monitor Evaluator", "Completer Finisher"],
+                    answer: [1],
+                    explanation: "Resource Investigators are enthusiastic networkers who explore opportunities outside the team. [cite: 192-200]"
+                },
+                {
+                    id: 9,
+                    question: "Tuckman's Stages: In which stage do team members become interdependent?",
+                    type: "radio",
+                    options: ["Forming", "Storming", "Norming", "Performing"],
+                    answer: [3],
+                    explanation: "Interdependence and high productivity characterize the Performing stage. [cite: 222-236]"
+                },
+                {
+                    id: 10,
+                    question: "Maslow's Hierarchy: How is 'Security / Lack of threats' categorized?",
+                    type: "radio",
+                    options: ["Social", "Safety", "Esteem"],
+                    answer: [1],
+                    explanation: "Security and lack of physical threat fall under Safety needs. [cite: 239-248]"
+                },
+                {
+                    id: 11,
+                    question: "In the UK, what gives EU law the force of law in member states?",
+                    type: "radio",
+                    options: ["An Act of Parliament", "The Treaty on the Functioning of the EU"],
+                    answer: [0],
+                    explanation: "In the UK (a dualist state), an Act of Parliament (European Communities Act 1972) was required. [cite: 251-255]"
+                },
+                {
+                    id: 12,
+                    question: "According to McGregor, which is a belief of a Theory X Manager?",
+                    type: "radio",
+                    options: ["Employees seek responsibility", "The average employee dislikes work", "It is natural to make an effort"],
+                    answer: [1],
+                    explanation: "Theory X assumes workers are lazy. Theory Y assumes they are self-motivated. [cite: 281-289]"
+                },
+                {
+                    id: 13,
+                    question: "PEST Analysis: Growth, Monetary Policy, and Taxation refer to which factor?",
+                    type: "radio",
+                    options: ["Political", "Economic", "Social", "Technological"],
+                    answer: [1],
+                    explanation: "These are key macroeconomic variables. [cite: 292-298]"
+                },
+                {
+                    id: 14,
+                    question: "Kolb's Learning Cycle: A combination of 'watching' and 'thinking' produces which learning style?",
+                    type: "radio",
+                    options: ["Accommodating", "Diverging", "Converging", "Assimilating"],
+                    answer: [3],
+                    explanation: "Reflective Observation (Watching) + Abstract Conceptualization (Thinking) = Assimilating. [cite: 359-372]"
+                },
+                {
+                    id: 15,
+                    question: "In SMART objectives, 'R' stands for:",
+                    type: "radio",
+                    options: ["Realistic", "Reasonable", "Representative"],
+                    answer: [0],
+                    explanation: "Specific, Measurable, Achievable, Realistic, Time-bound. [cite: 396-400]"
+                },
+                {
+                    id: 16,
+                    question: "Which of the following CANNOT be used to describe a service?",
+                    type: "radio",
+                    options: ["Perishable", "Inseparable", "Tangible", "Variable"],
+                    answer: [2],
+                    explanation: "Services are intangible; they cannot be touched or stored. [cite: 406-414]"
+                },
+                {
+                    id: 17,
+                    question: "Who distinguished between acts of leadership and the authority/acceptance of a leader?",
+                    type: "radio",
+                    options: ["Mintzberg", "Heifetz", "Kotter"],
+                    answer: [1],
+                    explanation: "Heifetz distinguished between technical authority and adaptive leadership. [cite: 419-430]"
+                },
+                {
+                    id: 18,
+                    question: "According to Anthony, which is a strategic role?",
+                    type: "checkbox",
+                    options: ["Experts", "Coordinators", "Guardians", "Advisors"],
+                    answer: [2, 3],
+                    explanation: "Guardians (governance) and Advisors (strategy formulation) are strategic roles. [cite: 435-447]"
+                },
+                {
+                    id: 19,
+                    question: "Who described culture as 'the collection of traditions, values, policies... a pervasive context'?",
+                    type: "radio",
+                    options: ["Schein", "Schwartz and Davis", "Mullins"],
+                    answer: [2],
+                    explanation: "This definition is attributed to Mullins. [cite: 451-453]"
+                },
+                {
+                    id: 20,
+                    question: "Handy's 'Power' culture has which TWO characteristics?",
+                    type: "checkbox",
+                    options: ["Lots of rules", "Quick to make decisions", "Lots of bureaucracy", "Succession problems"],
+                    answer: [1, 3],
+                    explanation: "Power culture (Zeus) is central and fast but suffers from succession issues. [cite: 477-488]"
+                },
+                {
+                    id: 21,
+                    question: "Which theory states an organisation must align the interests of the agents to the principals?",
+                    type: "radio",
+                    options: ["Accommodation theory", "Agency theory", "Corporate theory"],
+                    answer: [1],
+                    explanation: "Agency theory addresses the Principal-Agent problem. [cite: 494-502]"
+                },
+                {
+                    id: 22,
+                    question: "The head of Treasury reports directly to the shareholders. True or False?",
+                    type: "radio",
+                    options: ["True", "False"],
+                    answer: [1],
+                    explanation: "False. The Treasurer typically reports to the Finance Director (CFO). [cite: 510-516]"
+                },
+                {
+                    id: 23,
+                    question: "Which TWO are organisations NOT formed with the intention of generating a profit?",
+                    type: "checkbox",
+                    options: ["Private Limited Company", "Public Limited Company", "Public Sector Organisation", "Non-governmental Organisations"],
+                    answer: [2, 3],
+                    explanation: "Public sector bodies and NGOs have social or service objectives. [cite: 523-537]"
+                },
+                {
+                    id: 24,
+                    question: "Which stakeholder group do Non-Executive Directors (NEDs) belong to?",
+                    type: "radio",
+                    options: ["Internal stakeholders", "Connected stakeholders", "External stakeholders"],
+                    answer: [0],
+                    explanation: "NEDs are members of the board and thus Internal. [cite: 540-543]"
+                },
+                {
+                    id: 25,
+                    question: "The overall responsibility of compliance with Health and Safety lies with whom?",
+                    type: "radio",
+                    options: ["Employers (The Company)", "Employees", "Both"],
+                    answer: [0],
+                    explanation: "The Employer bears the ultimate legal duty. [cite: 567-570]"
+                },
+                {
+                    id: 26,
+                    question: "If household incomes rise and demand for a good falls, it is a:",
+                    type: "radio",
+                    options: ["Normal good", "Inferior good"],
+                    answer: [1],
+                    explanation: "Inferior goods are replaced by superior goods when income rises. [cite: 581-598]"
+                },
+                {
+                    id: 27,
+                    question: "Leavitt's Communication Patterns: A 5-member team where each communicates with only two others?",
+                    type: "radio",
+                    options: ["Circle", "Chain", "Y", "Wheel"],
+                    answer: [0],
+                    explanation: "In a Circle, members communicate only with immediate neighbors. [cite: 600-606]"
+                },
+                {
+                    id: 28,
+                    question: "Wrongful Dismissal: Which TWO statements are correct?",
+                    type: "checkbox",
+                    options: [
+                        "Minimum period of employment required",
+                        "Claim damages for breach of contract (notice)",
+                        "Only full-time employees can claim",
+                        "Damages calculated by notice period difference"
+                    ],
+                    answer: [1, 3],
+                    explanation: "Wrongful dismissal is a contract breach (usually notice). No minimum service needed. [cite: 617-625]"
+                },
+                {
+                    id: 29,
+                    question: "Joely bought faulty hair straighteners and returned them immediately. Who is responsible?",
+                    type: "radio",
+                    options: [
+                        "'AIR' (Manufacturer) is responsible",
+                        "J Ltd (Retailer) is responsible for partial refund",
+                        "J Ltd (Retailer) is responsible for full refund/replacement"
+                    ],
+                    answer: [2],
+                    explanation: "Consumer rights are against the Retailer. Immediate rejection allows for a full refund. [cite: 655-667]"
+                },
+                {
+                    id: 30,
+                    question: "Workforce 84.2m, Unemployed 2.1m. Calculate unemployment rate.",
+                    type: "radio",
+                    options: ["1.50%", "2.00%", "2.50%"],
+                    answer: [2],
+                    explanation: "(2.1 / 84.2) * 100 = 2.49%. Rounds to 2.50%. [cite: 673-678]"
+                },
+                {
+                    id: 31,
+                    question: "Product X has Substitute Z and Complement Y. Which shifts X demand left (decrease)?",
+                    type: "checkbox",
+                    options: [
+                        "Increase in price of Substitute Z",
+                        "Decrease in price of Substitute Z",
+                        "Increase in price of Complement Y",
+                        "Decrease in price of Complement Y"
+                    ],
+                    answer: [1, 2],
+                    explanation: "Cheaper substitute Z steals demand from X. Expensive complement Y reduces demand for Y and X. [cite: 690-698]"
+                },
+                {
+                    id: 32,
+                    question: "Which statement about demand is TRUE?",
+                    type: "radio",
+                    options: [
+                        "Demand for inferior goods rises as income rises",
+                        "Demand for luxury goods falls as household incomes fall",
+                        "Demand for a product will fall if cost of its complement falls"
+                    ],
+                    answer: [1],
+                    explanation: "Luxury goods are income elastic; demand drops significantly when income falls. [cite: 699-703]"
+                },
+                {
+                    id: 33,
+                    question: "Managers can communicate quickly with employees under them. Wide or Narrow span?",
+                    type: "radio",
+                    options: ["Wide span of control", "Narrow span of control"],
+                    answer: [0],
+                    explanation: "Wide span = Flat structure = fewer layers = faster vertical communication. [cite: 716-727]"
+                },
+                {
+                    id: 34,
+                    question: "It is the responsibility of the Secretary to ensure the agenda is clear. True or False?",
+                    type: "radio",
+                    options: ["True", "False"],
+                    answer: [0],
+                    explanation: "True. The Secretary prepares the agenda in consultation with the Chair. [cite: 732-737]"
+                },
+                {
+                    id: 35,
+                    question: "Corporate Governance: Which is NOT true for a listed company?",
+                    type: "radio",
+                    options: [
+                        "Must comply or explain",
+                        "Directors re-election at least every five years",
+                        "CEO and Chair cannot be same person"
+                    ],
+                    answer: [1],
+                    explanation: "Directors of listed companies should generally submit for re-election annually or every 3 years. [cite: 739-745]"
+                },
+                {
+                    id: 36,
+                    question: "Preparing budgets is a responsibility of which function?",
+                    type: "radio",
+                    options: ["Financial Accounting", "Management Accounting", "Treasury"],
+                    answer: [1],
+                    explanation: "Budgeting and forecasting are core Management Accounting tasks. [cite: 747-758]"
+                },
+                {
+                    id: 37,
+                    question: "A collection of programs to enter, organise and select data in a database is?",
+                    type: "radio",
+                    options: ["DBMS", "EIS", "Spreadsheet"],
+                    answer: [0],
+                    explanation: "Database Management System. [cite: 767-769]"
+                },
+                {
+                    id: 38,
+                    question: "Price rises $32 to $36 (+12.5%). Demand falls 4500 to 3600 (-20%). Calculate PED.",
+                    type: "radio",
+                    options: ["-1.6", "-2.0", "+2.0"],
+                    answer: [0],
+                    explanation: "PED = -20% / 12.5% = -1.6. [cite: 773-781]"
+                },
+                {
+                    id: 39,
+                    question: "Mintzberg: Which component advises the operating core (standardisation)?",
+                    type: "radio",
+                    options: ["Strategic apex", "Middle line", "Technostructure"],
+                    answer: [2],
+                    explanation: "The Technostructure (analysts/planners) standardises work processes. [cite: 783-786]"
+                },
+                {
+                    id: 40,
+                    question: "External auditors are appointed by whom?",
+                    type: "radio",
+                    options: ["Chief Executive", "Shareholders", "Audit Committee"],
+                    answer: [1],
+                    explanation: "Appointed by Shareholders at the AGM. [cite: 801-802]"
+                },
+                {
+                    id: 41,
+                    question: "Jack advises new recruits on indirect work topics. He is a:",
+                    type: "radio",
+                    options: ["Coach", "Mentor", "Counsellor"],
+                    answer: [1],
+                    explanation: "Mentoring involves holistic, long-term career and personal support. [cite: 814-821]"
+                },
+                {
+                    id: 42,
+                    question: "Sophia asks for copies of all information held about her. This is:",
+                    type: "radio",
+                    options: ["Freedom of subject access", "Right of subject access"],
+                    answer: [1],
+                    explanation: "A Subject Access Request (SAR) is a right under data protection law. [cite: 823-827]"
+                },
+                {
+                    id: 43,
+                    question: "Data Security: Best measures to prevent unauthorised disclosure on laptops? (Select TWO)",
+                    type: "checkbox",
+                    options: ["Off-site backups", "Training users", "Encryption", "Validation"],
+                    answer: [1, 2],
+                    explanation: "Encryption protects data if stolen. Training reduces human error. [cite: 829-841]"
+                },
+                {
+                    id: 101,
+                    question: "Which of the following statements regarding the age diversity of the workforce is true?",
+                    type: "radio",
+                    options: [
+                        "An ageing population will lead to a larger supply of labour",
+                        "Older workers are less committed to the organisation",
+                        "Older workers are less likely to be absent than younger workers"
+                    ],
+                    answer: [2],
+                    explanation: "Older workers generally have lower absenteeism and higher retention rates."
+                },
+                {
+                    id: 102,
+                    question: "Which of the following is NOT a benefit of a matrix structure?",
+                    type: "radio",
+                    options: [
+                        "Flexibility",
+                        "Dual authority",
+                        "Improved communication"
+                    ],
+                    answer: [1],
+                    explanation: "Dual authority (two bosses) is a disadvantage causing conflict."
+                },
+                {
+                    id: 103,
+                    question: "Which of the following is a feature of a public limited company (plc)?",
+                    type: "radio",
+                    options: [
+                        "Shares can be sold to the general public",
+                        "Directors must be shareholders",
+                        "There is no minimum capital requirement"
+                    ],
+                    answer: [0],
+                    explanation: "PLCs can list on the stock exchange and sell to the public."
+                },
+                {
+                    id: 104,
+                    question: "The supply curve for a product shifts to the right. Which of the following could have caused this?",
+                    type: "radio",
+                    options: [
+                        "A rise in production costs",
+                        "A fall in production costs",
+                        "A rise in consumer income"
+                    ],
+                    answer: [1],
+                    explanation: "Rightward shift = Increase in supply. Lower costs allow firms to supply more."
+                },
+                {
+                    id: 105,
+                    question: "A product has a PED of -2.5. If price rises by 10%, what happens to demand?",
+                    type: "radio",
+                    options: [
+                        "Falls by 25%",
+                        "Rises by 25%",
+                        "Falls by 4%"
+                    ],
+                    answer: [0],
+                    explanation: "-2.5 * 10% = -25%. Demand falls by 25%."
+                },
+                {
+                    id: 106,
+                    question: "Which of the following is a fiscal policy measure?",
+                    type: "radio",
+                    options: ["Interest rates", "Money supply", "Taxation"],
+                    answer: [2],
+                    explanation: "Taxation and Government spending are Fiscal. Interest rates are Monetary."
+                },
+                {
+                    id: 107,
+                    question: "Data Protection: Responsibility of the 'Data Controller'?",
+                    type: "radio",
+                    options: [
+                        "Processing data on behalf of client",
+                        "Determining the purposes and means of processing",
+                        "Ensuring encryption"
+                    ],
+                    answer: [1],
+                    explanation: "The Controller determines the 'why' and 'how'. The Processor acts on their behalf."
+                },
+                {
+                    id: 108,
+                    question: "Marketing Mix: 'Place' is concerned with:",
+                    type: "radio",
+                    options: ["Location of HQ", "Distribution channels", "Packaging"],
+                    answer: [1],
+                    explanation: "Place refers to distribution and logistics."
+                },
+                {
+                    id: 109,
+                    question: "Mintzberg: Part of organisation concerned with standardisation of processes?",
+                    type: "radio",
+                    options: ["Strategic Apex", "Operating Core", "Technostructure"],
+                    answer: [2],
+                    explanation: "Technostructure (analysts) standardises work."
+                },
+                {
+                    id: 110,
+                    question: "Porter's Value Chain: Which is a 'Primary Activity'?",
+                    type: "radio",
+                    options: ["Procurement", "Technology Development", "Outbound Logistics"],
+                    answer: [2],
+                    explanation: "Inbound, Operations, Outbound, Marketing, Service are Primary."
+                },
+                {
+                    id: 111,
+                    question: "SWOT: 'Opportunities' are:",
+                    type: "radio",
+                    options: ["Internal strengths", "External factors for advantage", "Internal weaknesses"],
+                    answer: [1],
+                    explanation: "Opportunities and Threats are External."
+                },
+                {
+                    id: 112,
+                    question: "Hofstede: 'Power Distance' is:",
+                    type: "radio",
+                    options: [
+                        "Acceptance of unequal power distribution",
+                        "Avoidance of uncertainty",
+                        "Preference for individualism"
+                    ],
+                    answer: [0],
+                    explanation: "Power Distance is the extent to which less powerful members accept inequality."
+                },
+                {
+                    id: 113,
+                    question: "Benefit of outsourcing?",
+                    type: "radio",
+                    options: [
+                        "Loss of control",
+                        "Access to specialist skills",
+                        "Risk to confidentiality"
+                    ],
+                    answer: [1],
+                    explanation: "Access to expertise not available in-house is a key benefit."
+                },
+                {
+                    id: 114,
+                    question: "Positive cross elasticity (XED) means goods are:",
+                    type: "radio",
+                    options: ["Substitutes", "Complements", "Inferior"],
+                    answer: [0],
+                    explanation: "If Price A goes up, Demand B goes up (consumers switch). They are substitutes."
+                },
+                {
+                    id: 115,
+                    question: "Characteristic of Perfect Competition:",
+                    type: "radio",
+                    options: ["Few large sellers", "High barriers to entry", "Many small buyers/sellers"],
+                    answer: [2],
+                    explanation: "Many participants, homogenous products, perfect information."
+                },
+                {
+                    id: 116,
+                    question: "Minimum price (floor) set ABOVE equilibrium results in:",
+                    type: "radio",
+                    options: ["Excess demand", "Excess supply", "Equilibrium"],
+                    answer: [1],
+                    explanation: "High price encourages supply but discourages demand -> Surplus (Excess supply)."
+                },
+                {
+                    id: 117,
+                    question: "Tuckman: Stage where conflicts and confrontations arise?",
+                    type: "radio",
+                    options: ["Forming", "Storming", "Norming"],
+                    answer: [1],
+                    explanation: "Storming is the conflict stage."
+                },
+                {
+                    id: 118,
+                    question: "Belbin role: 'Challenging, dynamic, thrives on pressure'?",
+                    type: "radio",
+                    options: ["Plant", "Shaper", "Coordinator"],
+                    answer: [1],
+                    explanation: "The Shaper drives the team and overcomes obstacles."
+                },
+                {
+                    id: 119,
+                    question: "'Teeming and lading' is fraud involving:",
+                    type: "radio",
+                    options: ["Theft of inventory", "Theft of cash concealed by delaying recording receipts"],
+                    answer: [1],
+                    explanation: "Hiding a theft of cash by using subsequent receipts to cover the gap."
+                },
+                {
+                    id: 120,
+                    question: "'Layering' in money laundering involves:",
+                    type: "radio",
+                    options: ["Placement", "Moving money to disguise origin", "Integration"],
+                    answer: [1],
+                    explanation: "Layering is the complex movement of funds to separate them from the crime."
+                },
+                {
+                    id: 121,
+                    question: "Definition of Prime Cost:",
+                    type: "radio",
+                    options: [
+                        "Direct Material + Direct Labour + Direct Expenses",
+                        "Total Production Cost",
+                        "Variable Overheads"
+                    ],
+                    answer: [0],
+                    explanation: "Prime Cost is the sum of all Direct costs."
+                },
+                {
+                    id: 122,
+                    question: "'Span of Control' refers to:",
+                    type: "radio",
+                    options: [
+                        "Number of employees in firm",
+                        "Number of subordinates reporting directly to a manager"
+                    ],
+                    answer: [1],
+                    explanation: "Direct reports equal the span."
+                },
+                {
+                    id: 123,
+                    question: "Responsibility of Audit Committee:",
+                    type: "radio",
+                    options: [
+                        "Reviewing internal financial controls",
+                        "Managing operations",
+                        "Hiring staff"
+                    ],
+                    answer: [0],
+                    explanation: "Oversight of controls and reporting."
+                },
+                {
+                    id: 124,
+                    question: "Internal Auditor typically reports to:",
+                    type: "radio",
+                    options: ["CEO", "Finance Director", "Audit Committee"],
+                    answer: [2],
+                    explanation: "Reporting to the Audit Committee ensures independence from the management they audit."
+                },
+                {
+                    id: 125,
+                    question: "Cyclical unemployment is caused by:",
+                    type: "radio",
+                    options: [
+                        "Lack of aggregate demand",
+                        "Skills mismatch",
+                        "Seasonal fluctuations"
+                    ],
+                    answer: [0],
+                    explanation: "Cyclical (Keynesian) unemployment is due to economic recession (low demand)."
+                }
+            ]
+        }
+    };
+
+    const STORAGE_KEY = "accaQuizResults";
+    const MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+    let currentQuizId = Object.keys(quizLibrary)[0];
+    let hasSubmitted = false;
+    let historyCache = [];
+
+    function getCurrentQuiz() {
+        return quizLibrary[currentQuizId];
+    }
+
+    function populateMockSelector() {
+        const selector = document.getElementById('mock-selector');
+        selector.innerHTML = '';
+        Object.entries(quizLibrary).forEach(([id, quiz]) => {
+            const opt = document.createElement('option');
+            opt.value = id;
+            opt.textContent = quiz.title;
+            selector.appendChild(opt);
+        });
+        selector.value = currentQuizId;
+    }
+
+    function buildQuiz() {
+        const quizContainer = document.getElementById('quiz-area');
+        let html = '';
+        let currentSection = '';
+        const questions = getCurrentQuiz().questions;
+
+        questions.forEach((q, index) => {
+            if (q.section && q.section !== currentSection) {
+                html += `<div class="section-header">${q.section}</div>`;
+                currentSection = q.section;
+            }
+
+            html += `<div class="question-card" id="card-${index}">
+                <div class="question-title">${q.question}</div>
+                <div class="options">`;
+            
+            q.options.forEach((opt, i) => {
+                let inputType = q.type; 
+                html += `<label>
+                    <input type="${inputType}" name="q${index}" value="${i}">
+                    <span>${opt}</span>
+                </label>`;
+            });
+
+            html += `</div>
+                <div class="feedback" id="feedback-${index}"></div>
+                <button class="show-answer-btn" id="show-answer-${index}" onclick="toggleAnswer(${index})" disabled>Show Answer</button>
+            </div>`;
+        });
+
+        quizContainer.innerHTML = html;
+        hasSubmitted = false;
+        document.getElementById('result-display').style.display = 'none';
+        document.getElementById('result-display').innerHTML = '';
+    }
+
+    function calculateScore() {
+        const questions = getCurrentQuiz().questions;
+        let score = 0;
+        const attempt = {
+            quizId: currentQuizId,
+            quizTitle: getCurrentQuiz().title,
+            timestamp: Date.now(),
+            total: questions.length,
+            score: 0,
+            percentage: 0,
+            answers: []
+        };
+
+        questions.forEach((q, index) => {
+            const feedbackDiv = document.getElementById(`feedback-${index}`);
+            const inputs = document.querySelectorAll(`input[name="q${index}"]:checked`);
+            
+            let userAnswers = [];
+            inputs.forEach(input => userAnswers.push(parseInt(input.value)));
+            userAnswers.sort();
+
+            // Compare arrays
+            let isCorrect = false;
+            if (userAnswers.length === q.answer.length && 
+                userAnswers.every((value, i) => value === q.answer[i])) {
+                isCorrect = true;
+                score++;
+            }
+
+            if (isCorrect) {
+                feedbackDiv.className = 'feedback correct';
+                feedbackDiv.innerHTML = `<strong>✓ Correct</strong><div class="explanation">${q.explanation}</div>`;
+            } else {
+                feedbackDiv.className = 'feedback incorrect';
+                let correctText = q.answer.map(i => q.options[i]).join(', ');
+                feedbackDiv.innerHTML = `<strong>✗ Incorrect</strong><br>Correct Answer: <span class="highlight">${correctText}</span><div class="explanation">${q.explanation}</div>`;
+            }
+
+            // Hide feedback after grading and enable per-question toggle
+            feedbackDiv.style.display = 'none';
+            const toggleBtn = document.getElementById(`show-answer-${index}`);
+            toggleBtn.disabled = false;
+            toggleBtn.textContent = 'Show Answer';
+
+            attempt.answers.push({
+                questionId: q.id,
+                question: q.question,
+                isCorrect,
+                userAnswers,
+                correctAnswers: q.answer,
+                userAnswerText: userAnswers.map(i => q.options[i]).filter(Boolean),
+                correctAnswerText: q.answer.map(i => q.options[i])
+            });
+        });
+
+        hasSubmitted = true;
+        attempt.score = score;
+        attempt.percentage = Math.round((score / attempt.total) * 100);
+
+        const resultDisplay = document.getElementById('result-display');
+        resultDisplay.style.display = 'block';
+        let gradeColor = attempt.percentage >= 50 ? 'green' : 'red';
+        
+        resultDisplay.innerHTML = `
+            You scored ${attempt.score} / ${attempt.total}<br>
+            <span style="color:${gradeColor}; font-size:0.8em">${attempt.percentage}% - ${attempt.percentage >= 50 ? 'PASS' : 'FAIL'}</span>
+        `;
+        
+        recordAttempt(attempt);
+        resultDisplay.scrollIntoView({behavior: "smooth"});
+    }
+
+    function toggleAnswer(index) {
+        if (!hasSubmitted) return;
+        const feedbackDiv = document.getElementById(`feedback-${index}`);
+        const btn = document.getElementById(`show-answer-${index}`);
+        const isVisible = feedbackDiv.style.display === 'block';
+        feedbackDiv.style.display = isVisible ? 'none' : 'block';
+        btn.textContent = isVisible ? 'Show Answer' : 'Hide Answer';
+    }
+
+    function formatDate(ts) {
+        const d = new Date(ts);
+        return `${d.toLocaleDateString()} ${d.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}`;
+    }
+
+    function renderAnalytics() {
+        const panel = document.getElementById('analytics');
+        const history = historyCache.filter(h => h.quizId === currentQuizId);
+        panel.innerHTML = '<h3>Analytics (30 days)</h3>';
+        if (!history.length) {
+            panel.innerHTML += '<div>No attempts yet for this mock.</div>';
+            return;
+        }
+        const attempts = history.length;
+        const avg = Math.round(history.reduce((sum, h) => sum + h.percentage, 0) / attempts);
+        const best = Math.max(...history.map(h => h.percentage));
+        const last = history[history.length - 1];
+        panel.innerHTML += `
+            <div>Attempts: <strong>${attempts}</strong></div>
+            <div>Average score: <strong>${avg}%</strong></div>
+            <div>Best score: <strong>${best}%</strong></div>
+            <div>Last attempt: <strong>${last.score}/${last.total} (${last.percentage}%)</strong> on ${formatDate(last.timestamp)}</div>
+        `;
+    }
+
+    function renderHistory() {
+        const panel = document.getElementById('history');
+        const history = historyCache.filter(h => h.quizId === currentQuizId);
+        panel.innerHTML = '<h3>Recent Attempts</h3>';
+        if (!history.length) {
+            panel.innerHTML += '<div>No attempts stored yet.</div>';
+            return;
+        }
+        const recent = history.slice(-5).reverse();
+        panel.innerHTML += recent.map(h => `
+            <div class="history-item">
+                <strong>${formatDate(h.timestamp)}</strong> — ${h.score}/${h.total} (${h.percentage}%)
+            </div>
+        `).join('');
+        panel.innerHTML += '<div style="font-size:0.85em; color:#7f8c8d;">History kept for 30 days. Oldest data is removed first if storage is full.</div>';
+    }
+
+    function renderWrongAnswers() {
+        const panel = document.getElementById('wrong-answers');
+        const history = historyCache.filter(h => h.quizId === currentQuizId);
+        panel.innerHTML = '<h3>Review Past Wrong Answers (latest attempt)</h3>';
+        if (!history.length) {
+            panel.innerHTML += '<div>No attempts yet to review.</div>';
+            return;
+        }
+        const latest = history[history.length - 1];
+        const wrong = latest.answers.filter(a => !a.isCorrect);
+        if (!wrong.length) {
+            panel.innerHTML += `<div>Great job! No wrong answers on your last attempt (${formatDate(latest.timestamp)}).</div>`;
+            return;
+        }
+        panel.innerHTML += `<div>From ${formatDate(latest.timestamp)}:</div>`;
+        panel.innerHTML += wrong.map(item => `
+            <div class="wrong-answer">
+                <div><strong>${item.question}</strong></div>
+                <div>Your answer: ${item.userAnswerText.length ? item.userAnswerText.join(', ') : 'No selection'}</div>
+                <div>Correct answer: ${item.correctAnswerText.join(', ')}</div>
+            </div>
+        `).join('');
+    }
+
+    function pruneHistory(history) {
+        const cutoff = Date.now() - MAX_AGE_MS;
+        return history.filter(entry => entry.timestamp >= cutoff);
+    }
+
+    function loadHistory() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return [];
+            const parsed = JSON.parse(raw);
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function persistHistory(history) {
+        let copy = [...history];
+        while (true) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(copy));
+                return copy;
+            } catch (e) {
+                if (!copy.length) {
+                    console.warn('Unable to save history: storage full.');
+                    return [];
+                }
+                // Remove oldest and retry
+                copy.shift();
+            }
+        }
+    }
+
+    function recordAttempt(attempt) {
+        historyCache.push(attempt);
+        historyCache = pruneHistory(historyCache);
+        historyCache = persistHistory(historyCache);
+        renderAnalytics();
+        renderHistory();
+        renderWrongAnswers();
+    }
+
+    function switchMock(id) {
+        if (!quizLibrary[id]) return;
+        currentQuizId = id;
+        buildQuiz();
+        renderAnalytics();
+        renderHistory();
+        renderWrongAnswers();
+    }
+
+    // Initialize
+    historyCache = pruneHistory(loadHistory());
+    historyCache = persistHistory(historyCache);
+    populateMockSelector();
+    buildQuiz();
+    renderAnalytics();
+    renderHistory();
+    renderWrongAnswers();
+</script>
+
+</body>
+</html>
