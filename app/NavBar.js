@@ -1,38 +1,27 @@
 'use client';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { clearSession, getSession } from './libClient';
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 export default function NavBar() {
-  const [session, setSession] = useState(null);
-  const router = useRouter();
-
-  useEffect(() => {
-    const refresh = () => setSession(getSession());
-    refresh();
-    window.addEventListener('mock-session-changed', refresh);
-    return () => window.removeEventListener('mock-session-changed', refresh);
-  }, []);
-
-  const handleLogout = () => {
-    clearSession();
-    setSession(null);
-    router.replace('/login');
-  };
+  const { data: session } = useSession();
 
   return (
     <nav className="flex items-center space-x-4 text-sm font-semibold">
-      {session ? (
+      {session?.user ? (
         <button
           className="text-gray-600 hover:text-blue-600"
-          onClick={handleLogout}
+          onClick={() => signOut({ callbackUrl: '/' })}
           type="button"
         >
           Logout
         </button>
       ) : (
-        <Link href="/login" className="text-gray-600 hover:text-blue-600">Login</Link>
+        <button
+          className="text-gray-600 hover:text-blue-600"
+          onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
+          type="button"
+        >
+          Login
+        </button>
       )}
     </nav>
   );

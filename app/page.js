@@ -1,8 +1,10 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useSession, signIn } from 'next-auth/react';
 
 export default function HomePage() {
+  const { data: session } = useSession();
   const [mobileOpen, setMobileOpen] = useState(false);
   return (
     <div className="bg-[#f8f9fa] text-gray-900">
@@ -18,9 +20,18 @@ export default function HomePage() {
             <a href="#categories" className="bg-blue-600 text-white py-3 px-8 rounded-xl font-semibold text-lg shadow-xl hover:bg-blue-700 transition duration-300 transform">
               Explore All Test Categories
             </a>
-            <a href="#features" className="text-blue-600 bg-white border border-blue-600 py-3 px-8 rounded-xl font-semibold text-lg hover:bg-blue-50 transition duration-300 transform">
-              How It Works
-            </a>
+            {session?.user ? (
+              <Link href="/dashboard" className="text-blue-600 bg-white border border-blue-600 py-3 px-8 rounded-xl font-semibold text-lg hover:bg-blue-50 transition duration-300 transform">
+                Go to Dashboard
+              </Link>
+            ) : (
+              <button
+                onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
+                className="text-blue-600 bg-white border border-blue-600 py-3 px-8 rounded-xl font-semibold text-lg hover:bg-blue-50 transition duration-300 transform"
+              >
+                Sign in with Google
+              </button>
+            )}
           </div>
         </div>
       </header>

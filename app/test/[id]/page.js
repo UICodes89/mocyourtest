@@ -2,7 +2,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { tests } from '../../../data/tests';
-import { getSession, recordAttempt, clearSession } from '../../../lib/storage';
+import { useSession, signIn, signOut } from 'next-auth/react';
+import { recordAttempt } from '../../../lib/storage';
 
 const formatTime = (sec) => {
   const h = Math.floor(sec / 3600).toString().padStart(2, '0');
@@ -13,9 +14,9 @@ const formatTime = (sec) => {
 
 export default function TestPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const params = useParams();
   const testId = params?.id;
-  const [session, setSession] = useState(null);
   const [responses, setResponses] = useState({});
   const [startedAt, setStartedAt] = useState(null);
   const [timeLeft, setTimeLeft] = useState(0);
@@ -23,15 +24,6 @@ export default function TestPage() {
   const [reveals, setReveals] = useState({});
 
   const test = useMemo(() => tests.find((t) => t.id === testId), [testId]);
-
-  useEffect(() => {
-    const sess = getSession();
-    if (!sess) {
-      router.replace('/login');
-      return;
-    }
-    setSession(sess);
-  }, [router]);
 
   useEffect(() => {
     if (!test) return;
@@ -71,7 +63,7 @@ export default function TestPage() {
   };
 
   const handleSubmit = (auto = false) => {
-    if (!test || !session) return;
+    if (!test || !session?.user?.email) return;
     let score = 0;
     const details = test.questions.map((q) => {
       const userAns = (responses[q.id] || []).slice().sort();
@@ -128,6 +120,22 @@ export default function TestPage() {
       </div>
     );
   }
+  if (status === 'loading') return null;
+  if (status !== 'authenticated') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center space-y-4">
+          <p className="text-lg text-gray-700">Please sign in with Google to take this test.</p>
+          <button
+            onClick={() => signIn('google', { callbackUrl: `/test/${testId}` })}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+          >
+            Sign in with Google
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex bg-[#f8f9fa] min-h-screen text-gray-900" style={{ width: '100%' }}>
@@ -148,7 +156,7 @@ export default function TestPage() {
         </nav>
         <div className="absolute bottom-4 left-4 right-4">
           <button
-            onClick={() => { clearSession(); router.replace('/login'); }}
+            onClick={() => signOut({ callbackUrl: '/' })}
             className="w-full flex items-center justify-center space-x-3 p-3 text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition duration-150"
           >
             <span>Log Out</span>

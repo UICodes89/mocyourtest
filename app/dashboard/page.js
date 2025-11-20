@@ -1,13 +1,13 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession, signIn } from 'next-auth/react';
 import { tests } from '../../data/tests';
-import { getSession, clearSession, getAttempts } from '../../lib/storage';
+import { getAttempts } from '../../lib/storage';
 
 export default function DashboardPage() {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [session, setSession] = useState(null);
+  const { data: session, status } = useSession();
   const [view, setView] = useState('dashboard');
   const [attempts, setAttempts] = useState([]);
 
@@ -15,23 +15,12 @@ export default function DashboardPage() {
   const [activeTestId, setActiveTestId] = useState(tests[0]?.id);
 
   useEffect(() => {
-    const sess = getSession();
-    if (!sess) {
-      router.replace('/login');
-      setLoading(false);
-      return;
+    if (status === 'authenticated' && session?.user?.email) {
+      setAttempts((getAttempts() || []).filter((a) => a.user === session.user.email));
     }
-    setSession(sess);
-    setAttempts((getAttempts() || []).filter((a) => a.user === sess.email));
-    setLoading(false);
-  }, [router]);
+  }, [status, session]);
 
   const activeTest = useMemo(() => tests.find((t) => t.id === activeTestId) || tests[0], [activeTestId]);
-
-  const logout = () => {
-    clearSession();
-    router.replace('/login');
-  };
 
   const totals = useMemo(() => {
     if (!attempts.length) return { avg: 0, count: 0, hours: 0 };
@@ -55,10 +44,22 @@ export default function DashboardPage() {
     return `${h}:${m}:${s}`;
   };
 
-  if (loading) {
-    return null;
+  if (status === 'loading') return null;
+  if (status !== 'authenticated') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center space-y-4">
+          <p className="text-lg text-gray-700">Please sign in with Google to access the dashboard.</p>
+          <button
+            onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+          >
+            Sign in with Google
+          </button>
+        </div>
+      </div>
+    );
   }
-  if (!session) return null;
 
   return (
     <div className="flex bg-[#f8f9fa] min-h-screen text-gray-900" style={{ width: '100%' }}>
@@ -87,15 +88,15 @@ export default function DashboardPage() {
         <div className="absolute bottom-4 left-4 right-4 space-y-2">
           <div className="flex items-center space-x-2 text-sm text-gray-700 bg-gray-50 rounded-lg p-3 border border-gray-200">
             <div className="h-8 w-8 rounded-full bg-blue-600 text-white flex items-center justify-center">
-              {(session?.name || session?.email || 'U').charAt(0).toUpperCase()}
+              {(session?.user?.name || session?.user?.email || 'U').charAt(0).toUpperCase()}
             </div>
             <div className="overflow-hidden">
-              <div className="font-semibold truncate">{session?.name || 'Profile'}</div>
-              <div className="text-gray-500 truncate">{session?.email}</div>
+              <div className="font-semibold truncate">{session?.user?.name || 'Profile'}</div>
+              <div className="text-gray-500 truncate">{session?.user?.email}</div>
             </div>
           </div>
           <button
-            onClick={logout}
+            onClick={() => signOut({ callbackUrl: '/' })}
             className="w-full flex items-center justify-center space-x-3 p-3 text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition duration-150"
           >
             <span>Log Out</span>
