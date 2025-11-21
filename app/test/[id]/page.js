@@ -1,9 +1,9 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { tests } from '../../../data/tests';
 import { useSession, signIn, signOut } from 'next-auth/react';
-import { recordAttempt } from '../../../lib/storage';
+import { recordAttempt, getAttempts } from '../../../lib/storage';
 
 const formatTime = (sec) => {
   const h = Math.floor(sec / 3600).toString().padStart(2, '0');
@@ -14,6 +14,7 @@ const formatTime = (sec) => {
 
 export default function TestPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { data: session, status } = useSession();
   const params = useParams();
   const testId = params?.id;
@@ -22,22 +23,35 @@ export default function TestPage() {
   const [timeLeft, setTimeLeft] = useState(0);
   const [submitted, setSubmitted] = useState(null);
   const [reveals, setReveals] = useState({});
+  const [attempts, setAttempts] = useState([]);
 
   const test = useMemo(() => tests.find((t) => t.id === testId), [testId]);
 
   useEffect(() => {
     if (!test) return;
-    setStartedAt(Date.now());
-    setTimeLeft((test.durationMinutes || 120) * 60);
-    setResponses({});
-    setSubmitted(null);
-    setReveals({});
+    // fresh attempt on load
+    startFresh();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [testId]);
 
+  // Load attempts history (kept for review, but not forced into the active attempt)
+  useEffect(() => {
+    if (!session?.user?.email || !test) {
+      setAttempts([]);
+      return;
+    }
+    const history = (getAttempts() || []).filter((a) => a.user === session.user.email && a.testId === test.id);
+    setAttempts(history);
+    const attemptParam = searchParams?.get('attempt');
+    if (attemptParam) {
+      const found = history.find((a) => String(a.finishedAt) === attemptParam);
+      if (found) reviewAttempt(found);
+    }
+  }, [session, test, searchParams]);
+
   // countdown
   useEffect(() => {
-    if (!startedAt) return;
+    if (!startedAt || submitted) return;
     const id = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
@@ -50,7 +64,7 @@ export default function TestPage() {
     }, 1000);
     return () => clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [startedAt]);
+  }, [startedAt, submitted]);
 
   const handleOption = (qid, idx, type) => {
     setResponses((prev) => {
@@ -74,7 +88,7 @@ export default function TestPage() {
     });
     const finishedAt = Date.now();
     const attempt = {
-      user: session.email,
+      user: session?.user?.email || 'anonymous',
       testId: test.id,
       testTitle: test.title,
       startedAt,
@@ -86,8 +100,28 @@ export default function TestPage() {
       answers: details,
       autoSubmitted: auto
     };
-    recordAttempt(attempt);
+    const updated = recordAttempt(attempt);
+    setAttempts(updated.filter((a) => a.testId === test.id && a.user === (session?.user?.email || '')));
     setSubmitted(attempt);
+  };
+
+  const startFresh = () => {
+    if (!test) return;
+    setResponses({});
+    setSubmitted(null);
+    setReveals({});
+    setStartedAt(Date.now());
+    setTimeLeft((test.durationMinutes || 120) * 60);
+  };
+
+  const reviewAttempt = (attempt) => {
+    if (!attempt) return;
+    setSubmitted(attempt);
+    const prefill = {};
+    (attempt.answers || []).forEach((a) => {
+      prefill[a.qid] = a.userAns || [];
+    });
+    setResponses(prefill);
   };
 
   const toggleReveal = (qid) => {
@@ -138,113 +172,137 @@ export default function TestPage() {
   }
 
   return (
-    <div className="flex bg-[#f8f9fa] min-h-screen text-gray-900" style={{ width: '100%' }}>
-      <aside className="hidden md:block w-64 fixed top-0 left-0 h-full bg-white border-r border-gray-200 p-4 z-20">
-        <div className="flex items-center space-x-2 mb-8">
-          <svg className="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span className="text-xl font-bold text-gray-800">MockYourTest</span>
-        </div>
-        <nav className="space-y-2">
-          <button
-            onClick={() => router.push('/dashboard')}
-            className="w-full flex items-center space-x-3 p-3 rounded-lg text-left text-gray-600 hover:bg-gray-100 transition duration-150"
-          >
-            <span>← Dashboard</span>
-          </button>
-        </nav>
-        <div className="absolute bottom-4 left-4 right-4">
-          <button
-            onClick={() => signOut({ callbackUrl: '/' })}
-            className="w-full flex items-center justify-center space-x-3 p-3 text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition duration-150"
-          >
-            <span>Log Out</span>
-          </button>
-        </div>
-      </aside>
-
-      <div className="flex-1 md:ml-64">
-        <header className="bg-white shadow-sm sticky top-0 z-10">
-          <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold">{test.title}</h1>
-              <p className="text-sm text-gray-500">{test.questions.length} questions • 120 minutes</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 text-blue-600 font-semibold">
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                <span>{formatTime(timeLeft)}</span>
-              </div>
-              <button onClick={() => handleSubmit(false)} className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">Submit</button>
-              <button onClick={() => router.push('/dashboard')} className="px-4 py-2 rounded-lg border border-gray-300">Exit</button>
-            </div>
+    <div className="bg-white min-h-screen text-gray-900" style={{ width: '100%' }}>
+      <div className="border-b bg-white">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="font-semibold text-gray-800 text-lg">{test.title}</div>
+            <div className="text-sm text-gray-500">{test.questions.length} questions • {test.durationMinutes || 120} minutes</div>
           </div>
-        </header>
-
-        <main className="max-w-6xl mx-auto px-4 py-6 space-y-4">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 text-blue-600 font-semibold">
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              <span>{formatTime(timeLeft)}</span>
+            </div>
+            <button onClick={() => handleSubmit(false)} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Submit</button>
+            <button onClick={() => router.push('/dashboard')} className="px-4 py-2 rounded-lg border border-gray-300">Exit</button>
+          </div>
+        </div>
+        <div className="max-w-6xl mx-auto px-4 pb-4 flex items-center justify-between text-sm text-gray-700">
+          <div className="flex items-center gap-3">
+            <div className="flex gap-1">
+              {test.questions.map((_, idx) => (
+                <span key={idx} className={`h-2 w-12 rounded-full ${idx < (submitted ? submitted.answers.filter(a => a.isCorrect).length : 0) ? 'bg-blue-600' : 'bg-gray-200'}`} />
+              ))}
+            </div>
+            <div className="font-semibold">{submitted ? `${submitted.answers.filter(a => a.isCorrect).length}/${test.questions.length}` : `0/${test.questions.length}`}</div>
+          </div>
           {submitted && (
-            <div className="p-4 bg-blue-50 text-blue-700 rounded-lg flex items-center justify-between">
-              <div>
-                <div className="font-semibold">Result: {submitted.score}/{submitted.total} ({submitted.percentage}%)</div>
-                <div className="text-sm text-blue-600">
-                  {submitted.autoSubmitted ? 'Auto-submitted (time up).' : 'Submitted.'} {new Date(submitted.finishedAt).toLocaleString()}
-                </div>
-              </div>
-              <button
-                onClick={() => setReveals(Object.fromEntries(test.questions.map((q) => [q.id, true])))}
-                className="bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition"
-              >
-                Reveal All
-              </button>
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-1 rounded-full bg-green-100 text-green-700 text-xs">Correct {submitted.answers.filter(a => a.isCorrect).length}</span>
+              <span className="px-2 py-1 rounded-full bg-red-100 text-red-700 text-xs">Wrong {submitted.answers.filter(a => !a.isCorrect && (a.userAns || []).length > 0).length}</span>
+              <span className="px-2 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs">Unanswered {submitted.answers.filter(a => (a.userAns || []).length === 0).length}</span>
             </div>
           )}
+        </div>
+      </div>
 
-          {test.questions.map((q) => (
-            <div key={q.id} className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
-              <h3 className="font-semibold text-gray-800 flex items-center">
-                Q{q.id}: {q.question}
-                {statusIcon(getStatus(q))}
-              </h3>
-              <div className="mt-3 space-y-2">
-                {q.options.map((opt, idx) => (
-                  <label key={idx} className="flex items-center gap-2 p-2 rounded hover:bg-gray-50">
-                    <input
-                      type={q.type === 'checkbox' ? 'checkbox' : 'radio'}
-                      name={`q-${q.id}`}
-                      checked={(responses[q.id] || []).includes(idx)}
-                      onChange={() => handleOption(q.id, idx, q.type)}
-                    />
-                    <span>{opt}</span>
-                  </label>
-                ))}
+      <div className="max-w-6xl mx-auto px-4 py-6 space-y-4">
+        {submitted && (
+          <div className="p-5 bg-gray-50 rounded-xl border flex flex-wrap gap-4">
+            <div>
+              <div className="text-sm text-gray-600">Score</div>
+              <div className="text-2xl font-semibold">{submitted.score}/{submitted.total}</div>
+            </div>
+            <div>
+              <div className="text-sm text-gray-600">Accuracy</div>
+              <div className="text-2xl font-semibold">{submitted.percentage}%</div>
+            </div>
+            <div>
+              <div className="text-sm text-gray-600">Right</div>
+              <div className="text-lg font-semibold text-green-700">{submitted.answers.filter(a => a.isCorrect).length}</div>
+            </div>
+            <div>
+              <div className="text-sm text-gray-600">Wrong</div>
+              <div className="text-lg font-semibold text-red-700">{submitted.answers.filter(a => !a.isCorrect && (a.userAns || []).length > 0).length}</div>
+            </div>
+            <div>
+              <div className="text-sm text-gray-600">Skipped</div>
+              <div className="text-lg font-semibold text-yellow-700">{submitted.answers.filter(a => (a.userAns || []).length === 0).length}</div>
+            </div>
+            <button
+              onClick={() => setReveals(Object.fromEntries(test.questions.map((q) => [q.id, true])))}
+              className="ml-auto bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+            >
+              Review All
+            </button>
+            <button
+              onClick={() => startFresh()}
+              className="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-200 transition"
+            >
+              Start new attempt
+            </button>
+          </div>
+        )}
+
+        {test.questions.map((q, qIdx) => {
+          const currentStatus = getStatus(q);
+          return (
+            <div key={q.id} className="rounded-xl border bg-white shadow-sm p-4">
+              <div className="flex items-start justify-between">
+                <div className="font-semibold text-gray-900">{qIdx + 1}. {q.question}</div>
+                {statusIcon(currentStatus)}
+              </div>
+              <div className="mt-3 space-y-3">
+                {q.options.map((opt, idx) => {
+                  const isUser = (responses[q.id] || []).includes(idx);
+                  const isCorrect = (q.answer || []).includes(idx);
+                  const showReveal = !!submitted;
+                  let border = 'border border-gray-200';
+                  let bg = 'bg-white';
+                  let text = 'text-gray-800';
+                  if (showReveal && isCorrect) {
+                    border = 'border-2 border-green-500';
+                    bg = 'bg-green-50';
+                    text = 'text-green-800';
+                  } else if (showReveal && isUser && !isCorrect) {
+                    border = 'border-2 border-red-500';
+                    bg = 'bg-red-50';
+                    text = 'text-red-800';
+                  }
+                  return (
+                    <label
+                      key={idx}
+                      className={`flex items-start gap-3 rounded-lg p-3 ${border} ${bg}`}
+                    >
+                      <input
+                        disabled={!!submitted}
+                        type={q.type === 'checkbox' ? 'checkbox' : 'radio'}
+                        name={`q-${q.id}`}
+                        checked={(responses[q.id] || []).includes(idx)}
+                        onChange={() => handleOption(q.id, idx, q.type)}
+                        className="mt-1"
+                      />
+                      <div className={`${text}`}>
+                        <div className="font-medium">{String.fromCharCode(65 + idx)}. {opt}</div>
+                        {showReveal && isCorrect && <div className="text-xs text-green-700 mt-1">Right answer</div>}
+                        {showReveal && isUser && !isCorrect && <div className="text-xs text-red-700 mt-1">Not quite</div>}
+                      </div>
+                    </label>
+                  );
+                })}
               </div>
 
               {submitted && (
-                <div className="mt-3">
-                  <button
-                    type="button"
-                    onClick={() => toggleReveal(q.id)}
-                    className="text-sm font-semibold text-blue-600 hover:underline"
-                  >
-                    {reveals[q.id] ? 'Hide explanation' : 'Show answer & reasoning'}
-                  </button>
-                  {reveals[q.id] && (
-                    <div className="mt-2 p-3 bg-gray-50 rounded border border-dashed border-gray-200 text-sm">
-                      <div><strong>Correct:</strong> {formatAnswers(q, q.answer)}</div>
-                      <div><strong>Your:</strong> {formatAnswers(q, submitted.answers?.find((a) => a.qid === q.id)?.userAns || []) || 'No answer'}</div>
-                      {q.explanation && <div className="mt-2 text-gray-700">{q.explanation}</div>}
-                    </div>
-                  )}
+                <div className="mt-4 bg-gray-50 border border-dashed rounded-lg p-3 text-sm text-gray-700">
+                  <div><strong>Correct:</strong> {formatAnswers(q, q.answer)}</div>
+                  <div><strong>Your:</strong> {formatAnswers(q, submitted.answers?.find((a) => a.qid === q.id)?.userAns || []) || 'No answer'}</div>
+                  {q.explanation && <div className="mt-2 text-gray-700">{q.explanation}</div>}
                 </div>
               )}
             </div>
-          ))}
-        </main>
-
-        <footer className="bg-gray-200 text-center py-4 text-sm text-gray-600">
-          MockYourTest • Local practice • ACCA mocks and more
-        </footer>
+          );
+        })}
       </div>
     </div>
   );

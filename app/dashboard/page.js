@@ -262,6 +262,7 @@ export default function DashboardPage() {
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Taken</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score %</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time Taken</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -271,6 +272,14 @@ export default function DashboardPage() {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(a.finishedAt).toLocaleString()}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{a.percentage}%</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatTime(a.durationSec || 0)}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          <button
+                            onClick={() => router.push(`/test/${a.testId}?attempt=${a.finishedAt}`)}
+                            className="text-blue-600 hover:underline"
+                          >
+                            Review
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>

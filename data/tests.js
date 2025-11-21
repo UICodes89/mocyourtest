@@ -1,3 +1,5 @@
+import { btBank2024 } from './bt_bank_2024';
+
 export const tests = [
   {
     "id": "acca-bt-mock-1",
@@ -1678,3 +1680,1294 @@ export const tests = [
     ]
   }
 ];
+
+// Build 3 new 50-question ACCA BT tests from the 2024-2025 question bank provided in bt_bank_2024.js
+const buildAccaBt2024Sets = () => {
+  if (!btBank2024?.questions?.length) return [];
+  const chunkSize = 50;
+  return Array.from({ length: 3 }, (_, idx) => {
+    const start = idx * chunkSize;
+    const slice = btBank2024.questions.slice(start, start + chunkSize);
+    return {
+      id: `acca-bt-2024-set-${idx + 1}`,
+      title: `ACCA BT 2024 Mock - Set ${idx + 1}`,
+      category: 'acca-bt',
+      durationMinutes: 120,
+      questions: slice.map((q) => {
+        const answer = [];
+        q.answerOptions.forEach((opt, i) => {
+          if (opt.isCorrect) answer.push(i);
+        });
+        const explanation =
+          q.answerOptions.find((opt) => opt.isCorrect && opt.rationale)?.rationale || '';
+        return {
+          id: q.questionNumber,
+          question: q.question,
+          type: answer.length > 1 ? 'checkbox' : 'radio',
+          options: q.answerOptions.map((opt) => opt.text),
+          answer,
+          explanation
+        };
+      })
+    };
+  });
+};
+
+tests.push(...buildAccaBt2024Sets());
+
+// New 2023-24 mock set (52 questions provided)
+tests.push({
+  id: 'bt-mock-2qs-2023-24',
+  title: 'BT Mock 2-Qs - 2023-24',
+  category: 'acca-bt',
+  durationMinutes: 120,
+  questions: [
+    {
+      id: 1,
+      question: "According to Fiedler, which of the managers are 'psychologically close managers'?",
+      type: 'radio',
+      options: [
+        "A. Olga and Lilia",
+        "B. Petr and Lilia",
+        "C. Petr only",
+        "D. Lilia only"
+      ],
+      answer: [1],
+      explanation: "Psychologically close managers (high LPC) are relationship-oriented; Petr and Lilia fit, Olga does not."
+    },
+    {
+      id: 2,
+      question: "According to Herzberg's two-factor theory, which elements provide long-term motivation at SportLand?",
+      type: 'checkbox',
+      options: [
+        "Competitive salaries and free family use of gym facilities",
+        "Technical and personal skills training programmes",
+        "Safe and pleasant working conditions",
+        "Personal supervision and counselling"
+      ],
+      answer: [1],
+      explanation: "Only Motivators (growth/training) drive long-term motivation; the rest are hygiene factors."
+    },
+    {
+      id: 3,
+      question: "Which of the following would achieve cost leadership?",
+      type: 'radio',
+      options: [
+        "Products are of superior quality",
+        "Purchasing/production match competitor quality at lower price",
+        "Inferior 'cheap and cheerful' products",
+        "Prices slightly above competitors"
+      ],
+      answer: [1],
+      explanation: "Cost leadership keeps equivalent quality while producing at lower cost, enabling lower prices or higher margins."
+    },
+    {
+      id: 4,
+      question: "Which factors could influence the culture of an organisation?",
+      type: 'checkbox',
+      options: [
+        "Industry and external environment",
+        "Directors, executives and senior managers",
+        "History of the organisation",
+        "Information systems and technology used"
+      ],
+      answer: [0, 1, 2, 3],
+      explanation: "Culture is shaped by history, leadership, environment, and technology/systems."
+    },
+    {
+      id: 5,
+      question: "Which could raise ethical issues for a sports manufacturer?",
+      type: 'checkbox',
+      options: [
+        "Sourcing of production materials",
+        "Quality of raw materials and products",
+        "Advertising of products and logo",
+        "Working conditions, recruitment, pay and age of employees"
+      ],
+      answer: [0, 1, 2, 3],
+      explanation: "All listed items present ethical risks (sourcing, quality, advertising integrity, labor conditions)."
+    },
+    {
+      id: 6,
+      question: "Tax exemptions on dividends/interest to encourage investment most affect which function?",
+      type: 'radio',
+      options: [
+        "Treasury",
+        "Management accounting",
+        "Financial accounting"
+      ],
+      answer: [0],
+      explanation: "Treasury manages investments and funding strategy affected by tax incentives."
+    },
+    {
+      id: 7,
+      question: "Which internal control change is least effective if staff collude with suppliers?",
+      type: 'radio',
+      options: [
+        "Regular supplier value reviews",
+        "Improved PO authorisation policy",
+        "Sequential numbering of transaction documents",
+        "Increased physical security over received goods"
+      ],
+      answer: [2],
+      explanation: "Numbering ensures completeness but not authenticity; collusion can bypass it."
+    },
+    {
+      id: 8,
+      question: "What communication pattern is described (central figure receives and returns information)?",
+      type: 'radio',
+      options: [
+        "Circle",
+        "Wheel",
+        "All channel"
+      ],
+      answer: [1],
+      explanation: "A Wheel has a central hub (the CEO) through which all communication flows."
+    },
+    {
+      id: 9,
+      question: "Poor quality lateral communication will result in which of the following?",
+      type: 'radio',
+      options: [
+        "Lack of direction",
+        "Lack of coordination",
+        "Lack of delegation"
+      ],
+      answer: [1],
+      explanation: "Lateral breakdown creates silos and poor coordination between peers/departments."
+    },
+    {
+      id: 10,
+      question: "Which TWO orientations are complementary rather than opposing?",
+      type: 'checkbox',
+      options: [
+        "Sales",
+        "Marketing",
+        "Product",
+        "Production"
+      ],
+      answer: [0, 3],
+      explanation: "Production and Sales orientations both emphasize pushing existing output to market."
+    },
+    {
+      id: 11,
+      question: "Who has ultimate responsibility for a sound system of internal control?",
+      type: 'radio',
+      options: [
+        "Board of directors",
+        "Audit committee",
+        "Finance department",
+        "Internal audit team"
+      ],
+      answer: [0],
+      explanation: "The Board owns overall responsibility; committees and teams support/monitor."
+    },
+    {
+      id: 12,
+      question: "Which is closely associated with classical economic theory?",
+      type: 'radio',
+      options: [
+        "Keynesian",
+        "Interventionist",
+        "Laissez-faire"
+      ],
+      answer: [2],
+      explanation: "Classical theory favors minimal intervention: laissez-faire."
+    },
+    {
+      id: 13,
+      question: "Purpose of substantive tests in external audit?",
+      type: 'radio',
+      options: [
+        "Identify causes of errors/omissions",
+        "Establish internal controls operate",
+        "Verify financial statements agree with assertions"
+      ],
+      answer: [2],
+      explanation: "Substantive tests check figures/transactions against management assertions to detect misstatements."
+    },
+    {
+      id: 14,
+      question: "Which factor most affects behaviour/performance at work?",
+      type: 'radio',
+      options: [
+        "Perception",
+        "Relationships with colleagues",
+        "Remuneration level"
+      ],
+      answer: [0],
+      explanation: "Perception is one of the key individual differences influencing behaviour."
+    },
+    {
+      id: 15,
+      question: "Organisational arrangement described (grapevine/rumor reliance) is characteristic of:",
+      type: 'radio',
+      options: [
+        "Centralisation",
+        "Informal organisation",
+        "Decentralisation",
+        "Empowerment"
+      ],
+      answer: [1],
+      explanation: "Informal organisation relies on unofficial social networks and grapevine communication."
+    },
+    {
+      id: 16,
+      question: "Porter's five forces: proprietary accessories for T4 Mobile respond to which force?",
+      type: 'radio',
+      options: [
+        "Bargaining power of suppliers",
+        "Bargaining power of customers",
+        "Intensity of competitive rivalry",
+        "Threat of new entrants"
+      ],
+      answer: [1],
+      explanation: "Proprietary ecosystem raises switching costs, reducing customer bargaining power."
+    },
+    {
+      id: 17,
+      question: "Contingency approach managers believe:",
+      type: 'radio',
+      options: [
+        "Success depends on economic circumstances",
+        "Effective management is about managing people",
+        "Lessons of earlier theorists should be adapted to circumstances",
+        "Managing change depends on clear vision"
+      ],
+      answer: [2],
+      explanation: "Contingency theory: no one best way; adapt methods to the situation."
+    },
+    {
+      id: 18,
+      question: "Belbin team roles displayed by Olga and Kim?",
+      type: 'radio',
+      options: [
+        "Shaper / Plant",
+        "Monitor evaluator / Shaper",
+        "Resource investigator / Monitor evaluator",
+        "Plant / Resource investigator"
+      ],
+      answer: [2],
+      explanation: "Olga networks (Resource Investigator); Kim is analytical (Monitor Evaluator)."
+    },
+    {
+      id: 19,
+      question: "Best distinction between a group and a team?",
+      type: 'radio',
+      options: [
+        "Groups >10 cannot become teams",
+        "Teams always have commonality; groups may not",
+        "Formality of interaction and shared task requirement"
+      ],
+      answer: [2],
+      explanation: "Teams are defined by interdependent interaction around a shared goal."
+    },
+    {
+      id: 20,
+      question: "Maslow: upgrading Sasha to First Class affects which need?",
+      type: 'radio',
+      options: [
+        "Safety and security",
+        "Ego and esteem",
+        "Social activity",
+        "Physiological"
+      ],
+      answer: [1],
+      explanation: "Upgrade confers status/recognition, satisfying esteem needs."
+    },
+    {
+      id: 21,
+      question: "Which characteristic likely led Dima to a wrong decision?",
+      type: 'radio',
+      options: [
+        "Timeliness",
+        "Consideration",
+        "Courtesy",
+        "Cost benefit"
+      ],
+      answer: [0],
+      explanation: "Acting too early without updated info makes the decision untimely."
+    },
+    {
+      id: 22,
+      question: "To what type of information system does 'drill down' usually apply?",
+      type: 'radio',
+      options: [
+        "Decision support systems (DSS)",
+        "Executive support systems (ESS)",
+        "Transaction processing system (TPS)",
+        "Knowledge work systems (KWS)"
+      ],
+      answer: [1],
+      explanation: "ESS dashboards allow drill-down from summaries to detail."
+    },
+    {
+      id: 23,
+      question: "Which software application is suitable for 'what-if' analysis?",
+      type: 'radio',
+      options: [
+        "Graphics software",
+        "Word processing",
+        "Database management systems (DBMS)",
+        "Spreadsheets"
+      ],
+      answer: [3],
+      explanation: "Spreadsheets are the standard tool for modeling and what-if scenarios."
+    },
+    {
+      id: 24,
+      question: "Which data protection principle is applied to the use of cookies?",
+      type: 'radio',
+      options: [
+        "Adequate, relevant and not excessive",
+        "Obtained only for specified purposes",
+        "Accurate and kept up to date",
+        "Processed fairly and lawfully"
+      ],
+      answer: [3],
+      explanation: "Consent/awareness make processing fair and lawful; hidden tracking breaches this."
+    },
+    {
+      id: 25,
+      question: "Prices in near perfect market: identify true/false statements.",
+      type: 'radio',
+      options: [
+        "Min price above equilibrium leads to surplus; price above equilibrium causes shortage",
+        "Min price above equilibrium leads to surplus; price above equilibrium causes surplus"
+      ],
+      answer: [1],
+      explanation: "Price floors above equilibrium create surplus; prices above equilibrium also cause surplus, not shortage."
+    },
+    {
+      id: 26,
+      question: "Price elasticity statements:",
+      type: 'radio',
+      options: [
+        "Elasticity >1 is price insensitive; inelastic demand + price fall lowers revenue",
+        "Elasticity >1 is price sensitive; inelastic demand + price fall lowers revenue"
+      ],
+      answer: [1],
+      explanation: "Elasticity >1 means sensitive; with inelastic demand, lowering price reduces revenue."
+    },
+    {
+      id: 27,
+      question: "Which country is in the recovery phase of its trade cycle?",
+      type: 'radio',
+      options: [
+        "South (declining GDP)",
+        "East (stable rate of growth)",
+        "North (slowdown in employment growth)",
+        "West (increasing inflationary pressures)"
+      ],
+      answer: [1],
+      explanation: "Stable resumed growth indicates recovery/expansion."
+    },
+    {
+      id: 28,
+      question: "Which action likely raises long-term economic welfare?",
+      type: 'radio',
+      options: [
+        "Tax on emissions",
+        "Tax on all products involving pollution",
+        "Total ban on polluting activities",
+        "Leave to free market"
+      ],
+      answer: [0],
+      explanation: "Taxing emissions internalizes externality without halting activity."
+    },
+    {
+      id: 29,
+      question: "Complete the sentence: \"[Name]'s hierarchy of needs attempts to explain how individuals start, ___ and direct behavior.\"",
+      type: 'radio',
+      options: [
+        "Maslow's, sustain",
+        "McGregor's, correct",
+        "Maslow's, pursue"
+      ],
+      answer: [0],
+      explanation: "Standard phrasing: start, direct, and sustain; linked to Maslow."
+    },
+    {
+      id: 30,
+      question: "Which is an example of behaviourist learning?",
+      type: 'radio',
+      options: [
+        "Foreign language students drilling via mobile practice",
+        "Students making mind maps and mnemonics",
+        "Trainees in work-based simulations"
+      ],
+      answer: [0],
+      explanation: "Behaviorist learning emphasizes repetition/drill stimulus-response."
+    },
+    {
+      id: 31,
+      question: "Which control prevents despatch to a customer unlikely to pay?",
+      type: 'radio',
+      options: [
+        "Authorise customer credit limit before despatch",
+        "Segregate duties for ordering/despatch/invoicing",
+        "Pre-number sales orders",
+        "Require payment before despatch"
+      ],
+      answer: [0],
+      explanation: "Checking credit limit addresses credit risk directly."
+    },
+    {
+      id: 32,
+      question: "Which circumstance would cause an auditor to modify (qualify) their opinion?",
+      type: 'radio',
+      options: [
+        "Material error not corrected",
+        "Material errors found then adjusted",
+        "No approval of financial statements by directors",
+        "True and fair view"
+      ],
+      answer: [0],
+      explanation: "Uncorrected material misstatement leads to a modified opinion."
+    },
+    {
+      id: 33,
+      question: "Tuckman stage likely on return to finish the match (conflict/criticism)?",
+      type: 'radio',
+      options: [
+        "Forming",
+        "Storming",
+        "Norming",
+        "Performing"
+      ],
+      answer: [1],
+      explanation: "Conflict and division indicate Storming."
+    },
+    {
+      id: 34,
+      question: "Aspect of the NED scrutiny role?",
+      type: 'radio',
+      options: [
+        "Monitoring adequacy of internal controls",
+        "Holding executive directors to account for decisions/performance",
+        "Contributing expertise",
+        "Overseeing appointments"
+      ],
+      answer: [1],
+      explanation: "Scrutiny = challenge/hold executives accountable."
+    },
+    {
+      id: 35,
+      question: "Example of a supra-national body?",
+      type: 'radio',
+      options: [
+        "International Criminal Court (ICC)",
+        "Alliance of international airlines",
+        "World Wildlife Fund"
+      ],
+      answer: [0],
+      explanation: "ICC has authority across nations; others are alliances/NGOs."
+    },
+    {
+      id: 36,
+      question: "Time management: high urgency but low importance tasks are:",
+      type: 'radio',
+      options: [
+        "Wasted time",
+        "Distraction",
+        "Quality time"
+      ],
+      answer: [1],
+      explanation: "Urgent/not important tasks are distractions (Covey matrix)."
+    },
+    {
+      id: 37,
+      question: "Carroll's CSR pyramid includes which four responsibilities?",
+      type: 'checkbox',
+      options: [
+        "Economic",
+        "Environmental",
+        "Ethical",
+        "Financial",
+        "Health and safety",
+        "Legal",
+        "Development",
+        "Philanthropic",
+        "Social"
+      ],
+      answer: [0, 2, 5, 7],
+      explanation: "Carroll: Economic, Legal, Ethical, Philanthropic."
+    },
+    {
+      id: 38,
+      question: "Best description of empowerment:",
+      type: 'radio',
+      options: [
+        "Ability to make meaningful analysis",
+        "Openness, straightforwardness and honesty",
+        "Process of enabling autonomous thinking",
+        "Three-dimensional ethical value"
+      ],
+      answer: [2],
+      explanation: "Empowerment gives autonomy/authority to act and think independently."
+    },
+    {
+      id: 39,
+      question: "Horizontal extension of a job to increase task variety is:",
+      type: 'radio',
+      options: [
+        "Job description",
+        "Job evaluation",
+        "Job enlargement",
+        "Job enrichment"
+      ],
+      answer: [2],
+      explanation: "Job enlargement adds similar-level tasks (horizontal)."
+    },
+    {
+      id: 40,
+      question: "Anthony's Hierarchy: board report with competitor summaries and long-term KPIs is:",
+      type: 'radio',
+      options: [
+        "Strategic",
+        "Tactical",
+        "Operational"
+      ],
+      answer: [0],
+      explanation: "Board-level, long-term, external-facing info is strategic."
+    },
+    {
+      id: 41,
+      question: "What type of appraisal is an online client survey ranking service?",
+      type: 'radio',
+      options: [
+        "Top-down",
+        "Self-appraisal",
+        "Sideways",
+        "External/Customer appraisal"
+      ],
+      answer: [3],
+      explanation: "Feedback from clients is external (customer) appraisal."
+    },
+    {
+      id: 42,
+      question: "Main barriers to entry in Hotstuff's industry?",
+      type: 'checkbox',
+      options: [
+        "Access to distribution channels",
+        "Supplier concentration",
+        "Economies of scale",
+        "Industry growth rate"
+      ],
+      answer: [0, 2],
+      explanation: "Supermarket distribution access and economies of scale are key barriers."
+    },
+    {
+      id: 43,
+      question: "Verification and validation are what category of controls?",
+      type: 'radio',
+      options: [
+        "Detective controls",
+        "Preventative controls",
+        "Corrective controls"
+      ],
+      answer: [1],
+      explanation: "Performed at input to prevent errors entering the system."
+    },
+    {
+      id: 44,
+      question: "Public interest actions: classify as YES/NO.",
+      type: 'checkbox',
+      options: [
+        "Auditor discloses whistleblower identity",
+        "Pilot discloses unsafe practices",
+        "Auditor reports material fraud to Charity Commission",
+        "Accountant reports fraudulent accounting to stock exchange regulator"
+      ],
+      answer: [1, 2, 3],
+      explanation: "Only revealing a whistleblower's identity is not in public interest; others are."
+    },
+    {
+      id: 45,
+      question: "Time management: alternative name for procrastination?",
+      type: 'radio',
+      options: [
+        "Fire-fighting",
+        "Prioritising",
+        "Paralysis by planning",
+        "Paperwork"
+      ],
+      answer: [2],
+      explanation: "Over-planning that delays action is procrastination ('paralysis by planning')."
+    },
+    {
+      id: 46,
+      question: "Purpose of organisational controls best summarised by:",
+      type: 'radio',
+      options: [
+        "Carry out management directions",
+        "Ensure processes are efficient/effective",
+        "Ensure correct processing of transactions",
+        "Prevent fraud/error, ensure efficient resource use, ensure valid information"
+      ],
+      answer: [3],
+      explanation: "Option D captures COSO objectives of internal control."
+    },
+    {
+      id: 47,
+      question: "Training Needs Analysis tasks (choose the best overall set).",
+      type: 'checkbox',
+      options: [
+        "Identify stages: Appraisals, Strategy",
+        "Identify reactive needs: Complaints, Poor Supervision",
+        "Recommend training: MBA, Mentoring, Induction, Webinars/CPD",
+        "Include legislation and new services as reactive only"
+      ],
+      answer: [0, 1, 2],
+      explanation: "Stages include appraisals/strategy; reactive needs include complaints/supervision; recommended training spans MBA, mentoring, induction, CPD."
+    },
+    {
+      id: 48,
+      question: "Corporate Code of Ethics (JHG) tasks: pick correct mappings.",
+      type: 'checkbox',
+      options: [
+        "Jenny = Normative",
+        "Alan = Instrumental",
+        "Code topic = Environmental responsibilities",
+        "Code topic = Shareholder representation only"
+      ],
+      answer: [0, 1, 2],
+      explanation: "Jenny follows values (normative); Alan is profit-driven (instrumental); scenario points to environmental responsibilities."
+    },
+    {
+      id: 49,
+      question: "Stakeholders (Kilda Company) tasks.",
+      type: 'checkbox',
+      options: [
+        "Tax Authority: High Power / High Interest (Key Player)",
+        "Stakeholder: any group who can affect/be affected",
+        "Tax Authority classification: External",
+        "Tax Authority classification: Connected"
+      ],
+      answer: [0, 1, 2],
+      explanation: "Tax authority is a key player, fits Freeman definition of stakeholder, and is an external stakeholder."
+    },
+    {
+      id: 50,
+      question: "Audit Committee tasks (select correct statements).",
+      type: 'checkbox',
+      options: [
+        "Chairman should not chair audit committee",
+        "Committee monitors integrity of FS",
+        "Committee assesses internal audit",
+        "Committee appoints external auditor directly"
+      ],
+      answer: [0, 1, 2],
+      explanation: "Chair should not chair; the committee monitors statements and IA but recommends (does not appoint) external auditor."
+    },
+    {
+      id: 51,
+      question: "Information Systems tasks.",
+      type: 'checkbox',
+      options: [
+        "Executives use ESS",
+        "Junior accountants use TPS",
+        "Researchers use KWS",
+        "Consultants use DSS",
+        "SMART excludes Reasonable and Attainable (vs Achievable/Relevant/Time-bound)"
+      ],
+      answer: [0, 1, 2, 3, 4],
+      explanation: "Role-to-system matches listed; in SMART, Reasonable/Attainable are not the standard strict terms."
+    },
+    {
+      id: 52,
+      question: "Fraud tasks (select correct statements).",
+      type: 'checkbox',
+      options: [
+        "Employee theft of entrusted funds is embezzlement",
+        "Fraud is harder to detect than error (True)",
+        "Internal control guarantees prevention of all errors (False)",
+        "Background checks/daily counts deter fraud"
+      ],
+      answer: [0, 1, 3],
+      explanation: "Embezzlement fits entrusted funds; fraud harder than error; controls can't guarantee prevention; checks/counts deter."
+    }
+  ]
+});
+
+// New BT Mock 1 (additional set from provided question list)
+tests.push({
+  id: 'bt-mock-1-legacy',
+  title: 'BT Mock 1',
+  category: 'acca-bt',
+  durationMinutes: 120,
+  questions: [
+    {
+      id: 1,
+      question: 'Classify the following as either injections into or withdrawals from the economy.',
+      type: 'checkbox',
+      options: [
+        'Export income (Injection)',
+        'Taxation (Withdrawal)',
+        'Government spending (Injection)',
+        'Saving (Withdrawal)'
+      ],
+      answer: [0, 1, 2, 3],
+      explanation: 'Injections: Exports, Investment, Government Spending. Withdrawals: Savings, Taxation, Imports.'
+    },
+    {
+      id: 2,
+      question: 'Managers should ignore the informal organisation when making decisions. True or False?',
+      type: 'radio',
+      options: ['True', 'False'],
+      answer: [1],
+      explanation: 'Informal networks influence morale, communication, and change adoption; they must be considered.'
+    },
+    {
+      id: 3,
+      question: "Blake and Mouton: manager high people/low results style is called:",
+      type: 'radio',
+      options: ['Country Club', 'Impoverished', 'Middle of the Road', 'Team'],
+      answer: [0],
+      explanation: 'High concern for people, low concern for production = Country Club (1,9).'
+    },
+    {
+      id: 4,
+      question: "Which is NOT in Maslow's hierarchy?",
+      type: 'radio',
+      options: ['Growth', 'Self-actualisation', 'Physiological'],
+      answer: [0],
+      explanation: "Maslow’s levels: Physiological, Safety, Social, Esteem, Self-actualisation. ‘Growth’ is Alderfer’s term."
+    },
+    {
+      id: 5,
+      question: "Herzberg: which two are NOT motivation factors?",
+      type: 'checkbox',
+      options: ['Annual salary and bonus', 'Job security', 'Responsibility', 'Promotion'],
+      answer: [0, 1],
+      explanation: 'Salary and job security are hygiene factors; responsibility and promotion are motivators.'
+    },
+    {
+      id: 6,
+      question: 'Kolb: sensitive, imaginative, people-focused, likes groups. Preferred style?',
+      type: 'radio',
+      options: ['Accommodating', 'Diverging', 'Converging', 'Assimilating'],
+      answer: [1],
+      explanation: 'Diverging (feeling + watching) fits that description.'
+    },
+    {
+      id: 7,
+      question: 'Complete: Employees are ___ stakeholders; finance providers are ___ stakeholders.',
+      type: 'radio',
+      options: ['Internal / Connected', 'Internal / External', 'Connected / External'],
+      answer: [0],
+      explanation: 'Employees are internal; finance providers have contractual ties (connected).'
+    },
+    {
+      id: 8,
+      question: 'Under which categories would you expect to find pressure groups?',
+      type: 'radio',
+      options: ['External and Secondary', 'Internal and Primary', 'Connected and Primary'],
+      answer: [0],
+      explanation: 'Pressure groups are external, typically secondary stakeholders.'
+    },
+    {
+      id: 9,
+      question: 'Handy culture: Anya thinks she is superior to the firm; hard to manage. Which culture?',
+      type: 'radio',
+      options: ['Power', 'Role', 'Task', 'Person'],
+      answer: [3],
+      explanation: 'Person culture centers on individuals (consultants/professionals).'
+    },
+    {
+      id: 10,
+      question: 'Mendelow: which stakeholders should A Ltd involve? (Janet: 75% turnover, Amy: 60% ownership, Jack: reporter)',
+      type: 'checkbox',
+      options: ['Janet', 'Amy', 'Jack'],
+      answer: [0, 1],
+      explanation: 'High power & interest: key players Janet and Amy.'
+    },
+    {
+      id: 11,
+      question: 'Small dispersed shareholders (high power, low day-to-day interest) fall under which strategy?',
+      type: 'radio',
+      options: ['Minimal effort', 'Keep informed', 'Keep satisfied', 'Key players'],
+      answer: [2],
+      explanation: 'High power/low interest => keep satisfied.'
+    },
+    {
+      id: 12,
+      question: 'Rising rates, planning hard, wealth shifts from receivables to payables. Main factor?',
+      type: 'radio',
+      options: ['Inflation', 'Deflation', 'Stagnation', 'Unemployment'],
+      answer: [0],
+      explanation: 'Inflation erodes receivables, helps borrowers; often followed by rate hikes.'
+    },
+    {
+      id: 13,
+      question: 'Cheaper flights to Berlin: most likely outcomes?',
+      type: 'checkbox',
+      options: [
+        'Demand for Berlin hotel rooms falls',
+        'Demand for Berlin hotel rooms rises',
+        'Rival airline cuts its Berlin prices',
+        'Rival airline raises its Berlin prices'
+      ],
+      answer: [1, 2],
+      explanation: 'Flights/hotels are complements (hotel demand rises); substitutes respond by cutting price.'
+    },
+    {
+      id: 14,
+      question: 'Few managers, wide span, quick decisions, more fraud risk: what chain?',
+      type: 'radio',
+      options: ['Long scalar chain', 'Short scalar chain', 'Centralised', 'Decentralised'],
+      answer: [1],
+      explanation: 'A short scalar chain = flat, wide spans.'
+    },
+    {
+      id: 15,
+      question: "Anthony's hierarchy, operational level: which statement is NOT true?",
+      type: 'radio',
+      options: [
+        'Providers ensure infrastructure available',
+        'Customers are the beneficiaries',
+        'More efficient customers mean lower org spend'
+      ],
+      answer: [2],
+      explanation: 'Customers consume, not supply efficiency to the organisation.'
+    },
+    {
+      id: 16,
+      question: 'Identify TRUE/FALSE statements on audit roles/tests.',
+      type: 'radio',
+      options: [
+        'External audit reports errors to shareholders; IA reports to Finance Director; compliance tests seek control evidence; substantive tests find misstatements'
+      ],
+      answer: [0],
+      explanation: 'Only FD reporting is false; IA should report to Audit Committee.'
+    },
+    {
+      id: 17,
+      question: 'PEST - Political metric for a bus company?',
+      type: 'radio',
+      options: [
+        'Tracking devices (Technology)',
+        'Economic environment (Economic)',
+        'Fuel tax/congestion/environmental charges (Political)',
+        'Forecast car usage (Economic/Social)'
+      ],
+      answer: [2],
+      explanation: 'Government taxes/charges are Political factors.'
+    },
+    {
+      id: 18,
+      question: "Leavitt: fastest communication pattern?",
+      type: 'radio',
+      options: ['Circle', 'Y', 'Square', 'Wheel'],
+      answer: [3],
+      explanation: 'Wheel puts the leader at the hub; fastest for simple tasks.'
+    },
+    {
+      id: 19,
+      question: 'Rate cut by central bank: most affected department?',
+      type: 'radio',
+      options: ['Accounts receivable', 'Sales/marketing', 'Treasury'],
+      answer: [2],
+      explanation: 'Treasury manages funding/returns affected by rates.'
+    },
+    {
+      id: 20,
+      question: 'Cross-functional project teams while staying in departments describe which structure?',
+      type: 'radio',
+      options: ['Matrix', 'Horizontal', 'Scalar chain'],
+      answer: [0],
+      explanation: 'Dual lines/cross-team = matrix.'
+    },
+    {
+      id: 21,
+      question: 'Structural unemployment most likely caused by:',
+      type: 'radio',
+      options: [
+        'Seasonal surf slump',
+        'Grads in short-term jobs',
+        'Recession',
+        'Steel demand decline closing foundries'
+      ],
+      answer: [3],
+      explanation: 'Permanent industry decline = structural.'
+    },
+    {
+      id: 22,
+      question: 'Demand curve shift caused by conditions, not own-price movement. True or False?',
+      type: 'radio',
+      options: ['True', 'False'],
+      answer: [0],
+      explanation: 'Own-price moves along the curve; other factors shift the curve.'
+    },
+    {
+      id: 23,
+      question: 'Ultimate responsibility for fraud prevention?',
+      type: 'radio',
+      options: ['Fraud manager', 'Head of IA', 'External auditors', 'Board of Directors'],
+      answer: [3],
+      explanation: 'The board/management owns prevention/detection responsibility.'
+    },
+    {
+      id: 24,
+      question: 'Belbin: dynamic, thrives on pressure, pushes others, may annoy. Role?',
+      type: 'radio',
+      options: ['Shaper', 'Co-ordinator', 'Implementer', 'Plant'],
+      answer: [0],
+      explanation: 'Shaper = high-energy driver.'
+    },
+    {
+      id: 25,
+      question: "Mintzberg: which TWO are interpersonal roles?",
+      type: 'checkbox',
+      options: ['Figurehead', 'Entrepreneur', 'Spokesperson', 'Liaison'],
+      answer: [0, 3],
+      explanation: 'Interpersonal: Figurehead, Leader, Liaison. (Entrepreneur = decisional; Spokesperson = informational.)'
+    },
+    {
+      id: 26,
+      question: "FRAC Ltd refuses to write off bad debts. Fraud?",
+      type: 'radio',
+      options: ['Yes—overstates assets/profits', 'No'],
+      answer: [0],
+      explanation: 'Deliberately overstating assets/profits is financial statement fraud.'
+    },
+    {
+      id: 27,
+      question: 'Leadership approach with task/team/individual circles?',
+      type: 'radio',
+      options: ['Action-centred leadership'],
+      answer: [0],
+      explanation: "John Adair's action-centred leadership balances task, team, and individual."
+    },
+    {
+      id: 28,
+      question: 'Market with F plus two similar rivals is a:',
+      type: 'radio',
+      options: ['Oligopoly', 'Monopolistic competition'],
+      answer: [0],
+      explanation: 'Few large firms = oligopoly.'
+    },
+    {
+      id: 29,
+      question: 'Feature of monopolistic competition?',
+      type: 'radio',
+      options: [
+        'Few competitors',
+        'Undifferentiated products',
+        'No major barriers to entry/exit',
+        'Low advertising spend'
+      ],
+      answer: [2],
+      explanation: 'Many firms, differentiated products, low barriers; advertising often high.'
+    },
+    {
+      id: 30,
+      question: 'Which TWO are IFAC fundamental principles?',
+      type: 'checkbox',
+      options: ['Confidentiality', 'Loyalty', 'Social responsibility', 'Professional behaviour'],
+      answer: [0, 3],
+      explanation: 'IFAC: Integrity, Objectivity, Competence, Confidentiality, Professional behaviour.'
+    },
+    {
+      id: 31,
+      question: 'Which two statements are NOT true about public/private sector?',
+      type: 'checkbox',
+      options: [
+        'Public sector orgs are owned by government.',
+        'Private sector org is owned by shareholders.',
+        'Private ownership always means limited company.',
+        'NGO is business owned by workers.'
+      ],
+      answer: [2, 3],
+      explanation: 'Private can be sole trader/partnership; NGO is not worker-owned by default.'
+    },
+    {
+      id: 32,
+      question: 'NOT an advantage of narrow span of control?',
+      type: 'radio',
+      options: [
+        'Easier to control staff',
+        'Costs less because fewer managers',
+        'Less management skill is required'
+      ],
+      answer: [1],
+      explanation: 'Narrow spans need MORE managers, increasing cost.'
+    },
+    {
+      id: 33,
+      question: "Identify TWO of Porter's five forces.",
+      type: 'checkbox',
+      options: [
+        'Threat of substitutes',
+        'Threat of complements',
+        'Threat of new entrants',
+        'Threat of suppliers'
+      ],
+      answer: [0, 2],
+      explanation: 'Forces: rivalry, new entrants, substitutes, buyer power, supplier power.'
+    },
+    {
+      id: 34,
+      question: 'NOT an element of monetary policy?',
+      type: 'radio',
+      options: ['Interest rates', 'Taxation', 'Credit controls'],
+      answer: [1],
+      explanation: 'Taxation is fiscal policy.'
+    },
+    {
+      id: 35,
+      question: 'Govt income > expenditure: Budget? PSBR?',
+      type: 'radio',
+      options: [
+        'Budget surplus; PSBR negative',
+        'Budget deficit; PSBR positive',
+        'Budget surplus; PSBR positive'
+      ],
+      answer: [0],
+      explanation: 'Surplus reduces borrowing; PSBR becomes negative.'
+    },
+    {
+      id: 36,
+      question: 'Unlikely outcome when delayering?',
+      type: 'radio',
+      options: [
+        'Increase average span of control',
+        'Increase number of middle managers',
+        'Decrease length of scalar chain'
+      ],
+      answer: [1],
+      explanation: 'Delayering removes middle layers, so middle managers decrease.'
+    },
+    {
+      id: 37,
+      question: 'Which is NOT a connected stakeholder?',
+      type: 'radio',
+      options: ['Suppliers', 'Shareholders', 'Executive directors', 'Customers'],
+      answer: [2],
+      explanation: 'Executive directors are internal; others are connected.'
+    },
+    {
+      id: 38,
+      question: 'Act of Parliament in the UK is called:',
+      type: 'radio',
+      options: ['Primary law', 'Secondary law', 'Common law'],
+      answer: [0],
+      explanation: 'Statute/primary legislation = Acts of Parliament.'
+    },
+    {
+      id: 39,
+      question: 'NOT a feature of effective internal control system?',
+      type: 'radio',
+      options: ['Audit', 'Organisation', 'Personnel'],
+      answer: [0],
+      explanation: 'Audit monitors controls; core features are org/segregation/personnel etc.'
+    },
+    {
+      id: 40,
+      question: 'Who is ultimately responsible for adhering to Data Protection Act 2018?',
+      type: 'radio',
+      options: ['Data controller', 'Data entry clerk', 'Data supervisor'],
+      answer: [0],
+      explanation: 'Controller determines purposes/means and carries legal responsibility.'
+    },
+    {
+      id: 41,
+      question: 'SWOT: internal vs external parts.',
+      type: 'checkbox',
+      options: [
+        'Strengths (Internal)',
+        'Weaknesses (Internal)',
+        'Opportunities (External)',
+        'Threats (External)'
+      ],
+      answer: [0, 1, 2, 3],
+      explanation: 'S/W internal; O/T external.'
+    },
+    {
+      id: 42,
+      question: "Which TWO Ps apply specifically to services?",
+      type: 'checkbox',
+      options: ['People', 'Price', 'Promotion', 'Processes'],
+      answer: [0, 3],
+      explanation: 'Extended 7Ps add People, Processes, Physical evidence.'
+    },
+    {
+      id: 43,
+      question: 'PPP Ltd voluntary recall for faults is which strategy?',
+      type: 'radio',
+      options: ['Proactive', 'Reactive', 'Defence', 'Accommodation'],
+      answer: [0],
+      explanation: 'Voluntary, responsible action = proactive stance.'
+    },
+    {
+      id: 44,
+      question: 'Preparation/filing of annual accounts required by HMRC? True/False',
+      type: 'radio',
+      options: ['True', 'False'],
+      answer: [1],
+      explanation: 'Companies House/Companies Act require accounts; HMRC requires tax returns.'
+    },
+    {
+      id: 45,
+      question: "Most likely audit in not-for-profits?",
+      type: 'radio',
+      options: ['Management audit', 'Systems audit', 'Efficiency audit', "Value for money audit"],
+      answer: [3],
+      explanation: 'Not-for-profits focus on Economy/Efficiency/Effectiveness (VFM).'
+    },
+    {
+      id: 46,
+      question: 'Accountant told to process inaccurate invoices. First action?',
+      type: 'radio',
+      options: [
+        'Report to manager/ethics officer',
+        'Report to ACCA',
+        'Report to authorities',
+        'Resign'
+      ],
+      answer: [0],
+      explanation: 'Escalate internally first per ethical codes.'
+    },
+    {
+      id: 47,
+      question: 'Section B Q1: Political factors & inflation types (select best mapping).',
+      type: 'checkbox',
+      options: [
+        'Political: taxes/H&S spend/regulation',
+        'Inflation: Expectations, Demand-pull, Imported, Monetary',
+        'Political: tech choices',
+        'Inflation: all demand-pull'
+      ],
+      answer: [0, 1],
+      explanation: 'Political includes taxes, regulation, spending; inflation types as listed.'
+    },
+    {
+      id: 48,
+      question: 'Section B Q2: Ethics threats & values.',
+      type: 'checkbox',
+      options: [
+        'Advocacy, Self-review, Familiarity, Intimidation are threats',
+        'Business ethical values = norms/standards set by board',
+        'Only self-interest is a threat',
+        'Values are optional'
+      ],
+      answer: [0, 1],
+      explanation: 'Threats include advocacy/self-review/familiarity/intimidation (plus self-interest). Values guide behaviour to meet objectives.'
+    },
+    {
+      id: 49,
+      question: 'Section B Q3: Utility & demand shifts.',
+      type: 'checkbox',
+      options: [
+        'Utility max: MU/P equal across goods',
+        'Taste/substitutes shift demand curves',
+        'Own-price changes shift the curve',
+        'Rail demand falls if foreign holiday cheaper'
+      ],
+      answer: [0, 1, 3],
+      explanation: 'MU/P rule; taste/substitute changes shift; own price moves along curve; cheaper substitute shifts demand left.'
+    },
+    {
+      id: 50,
+      question: 'Section B Q4: Time management & development definitions.',
+      type: 'checkbox',
+      options: [
+        'Giving task away is not helping Kate',
+        'Coaching = structured/task',
+        'Mentoring = long-term/career',
+        'Counselling = personal issues'
+      ],
+      answer: [0, 1, 2, 3],
+      explanation: 'All listed align: don’t just remove task; define coaching/mentoring/counselling as given.'
+    },
+    {
+      id: 51,
+      question: 'Section B Q5: Financial systems mapping.',
+      type: 'checkbox',
+      options: [
+        'Private co accounts: IS, SOFP, Auditor report, Directors report',
+        'Payments not matched = Purchasing',
+        'Credit limits = Credit Control',
+        'Discounts = Sales Invoicing',
+        'HMRC filing = Payroll'
+      ],
+      answer: [0, 1, 2, 3, 4],
+      explanation: 'All mappings align to subsystems and required accounts.'
+    },
+    {
+      id: 52,
+      question: 'Section B Q6: Leadership vs management and theorists.',
+      type: 'checkbox',
+      options: [
+        'Fayol (functions), Mintzberg (roles), Drucker (people/comms), Taylor (scientific mgmt)',
+        'Leaders focus on people/change/long-term; managers on methods/timescales',
+        'Leaders only manage today',
+        'Taylor is about self-actualisation'
+      ],
+      answer: [0, 1],
+      explanation: 'Fayol/Mintzberg/Drucker/Taylor matches; leaders vs managers distinction as noted.'
+    }
+  ]
+});
+
+// Combined BT Mock Exam (First Intuition Q1-6 + BT Mock Q7-52)
+tests.push({
+  id: 'bt-combined-mock',
+  title: 'Combined Business Technology (BT) Mock Exam',
+  category: 'acca-bt',
+  durationMinutes: 120,
+  questions: [
+    { id: 1, question: 'Classify the following as either injections into or withdrawals from the economy.', type: 'checkbox', options: ['Export income (Injection)', 'Taxation (Withdrawal)', 'Government spending (Injection)', 'Saving (Withdrawal)'], answer: [0, 1, 2, 3], explanation: 'Injections add to the circular flow (exports, investment, government spending); withdrawals remove (savings, taxes, imports).' },
+    { id: 2, question: 'Managers should not consider the informal organisation when making decisions. True or False?', type: 'radio', options: ['True', 'False'], answer: [1], explanation: 'Informal networks influence morale, communication, and acceptance of change; they must be considered.' },
+    { id: 3, question: "Blake & Mouton: manager with high concern for people, low concern for results is:", type: 'radio', options: ['Country Club', 'Impoverished', 'Middle of the Road'], answer: [0], explanation: 'High people/low production = Country Club style (1,9).' },
+    { id: 4, question: "Which is NOT in Maslow's hierarchy of needs?", type: 'radio', options: ['Growth', 'Self-actualisation', 'Physiological'], answer: [0], explanation: "Growth is Alderfer’s ERG term; Maslow uses Physiological, Safety, Social, Esteem, Self-actualisation." },
+    { id: 5, question: "Herzberg: which two are NOT motivation factors?", type: 'checkbox', options: ['Annual salary and bonus', 'Job security', 'Responsibility', 'Promotion'], answer: [0, 1], explanation: 'Salary and job security are hygiene factors; responsibility and promotion are motivators.' },
+    { id: 6, question: 'Kolb: imaginative, people-oriented, likes groups, multiple perspectives. Style?', type: 'radio', options: ['Accommodating', 'Diverging', 'Converging', 'Assimilating'], answer: [1], explanation: 'Describes Diverging (feeling + watching).' },
+    { id: 7, question: 'Are these connected stakeholders? (Local community, Shareholders, Employees, Suppliers)', type: 'checkbox', options: ['Local community', 'Shareholders', 'Employees', 'Suppliers'], answer: [1, 3], explanation: 'Connected stakeholders have direct contractual/financial ties (shareholders, suppliers); employees are internal; community is external.' },
+    { id: 8, question: 'Fraud involving quantity discounts on purchases could result from:', type: 'radio', options: ['Staff collude with suppliers', 'Employees collude with customers', 'Employee under-records quantities received'], answer: [0], explanation: 'Purchase fraud commonly involves supplier collusion (kickbacks/false discounts).' },
+    { id: 9, question: 'Key objective of committee rules of procedure?', type: 'radio', options: ['Ensure equal speaking time', 'Match formality to topic', 'Deal with agenda quickly', 'Facilitate smooth running of the committee'], answer: [3], explanation: 'Standing orders exist to ensure orderly, smooth meetings.' },
+    { id: 10, question: 'Aging population cost drivers: which two factors?', type: 'checkbox', options: ['Decreasing birth rate', 'Increasing birth rate', 'Decreasing mortality rate', 'Increasing mortality rate'], answer: [0, 2], explanation: 'People live longer (lower mortality) and fewer young replace them (lower birth rate).' },
+    { id: 11, question: 'Chair of a meeting is responsible for:', type: 'radio', options: ['Taking minutes', 'Dealing with correspondence', 'Issuing notice/agenda', 'Approving and signing minutes'], answer: [3], explanation: 'Chair leads and signs minutes; admin is typically the secretary’s role.' },
+    { id: 12, question: 'Ethical approach: taking moral high ground beyond profit:', type: 'radio', options: ['Normative', 'Instrumental', 'Teleological', 'Utilitarian'], answer: [0], explanation: 'Normative ethics focuses on doing what is right because it is right.' },
+    { id: 13, question: 'What distinguishes a profession from an occupation?', type: 'radio', options: ['Governance by law/university education', 'Trade agreement/apprenticeship', 'Governance by professional association & ethical code', 'Ethical code & consultancy contracts'], answer: [2], explanation: 'Professions have governing bodies, entry standards, and a binding ethical code.' },
+    { id: 14, question: 'Fundamental ACCA principles (select two):', type: 'checkbox', options: ['Independence', 'Integrity', 'Objectivity', 'Professional qualification'], answer: [1, 2], explanation: 'ACCA/IESBA principles include Integrity and Objectivity (plus competence, confidentiality, professional behaviour).' },
+    { id: 15, question: 'Which manager is task-oriented?', type: 'radio', options: ['Petr', 'Jobi', 'Carol', 'Olga'], answer: [0], explanation: 'Petr focuses on decisions/instructions with little consultation.' },
+    { id: 16, question: 'Corporate governance is the [BLANK] by which organisations are directed and controlled.', type: 'radio', options: ['System', 'Structure', 'Procedure'], answer: [0], explanation: 'Classic Cadbury definition: the system of direction and control.' },
+    { id: 17, question: 'CSR responsibilities beyond short-term gains (select two):', type: 'checkbox', options: ['Economic', 'Ethical', 'Philanthropic', 'Financial'], answer: [1, 2], explanation: 'CSR extends to ethical and philanthropic responsibilities (alongside economic/legal).' },
+    { id: 18, question: 'Do these social trends directly affect most businesses? (Single households, falling birth rates, diverse population, environmental concern)', type: 'checkbox', options: ['Increase in single-person households', 'Falling birth rates', 'Increasing diversity', 'Greater environmental concern'], answer: [0, 1, 2, 3], explanation: 'All listed trends influence customers, workforce, and regulation.' },
+    { id: 19, question: 'Which are supra-national bodies?', type: 'checkbox', options: ['European Union', 'International Monetary Fund', 'World Wildlife Fund', 'International airline alliance'], answer: [0, 1], explanation: 'EU/IMF transcend national borders; WWF is an NGO; airlines are commercial.' },
+    { id: 20, question: '[BLANK] is the process of acquiring knowledge through experience leading to behavioural change.', type: 'radio', options: ['Education', 'Learning', 'Training'], answer: [1], explanation: 'Learning is the underlying change-through-experience process.' },
+    { id: 21, question: 'Demographic most likely to attract inward FDI:', type: 'radio', options: ['Young, well-educated workforce', 'Older workforce with high disposable income', 'Low taxes, declining population', 'Falling birth rates, high female:male ratio'], answer: [0], explanation: 'FDI seeks available, capable labour.' },
+    { id: 22, question: 'Who determines if external auditor can provide other services (independence)?', type: 'radio', options: ['Directors', 'Audit committee', 'Shareholders', 'Nominations committee'], answer: [1], explanation: 'Audit committee oversees external auditor independence and non-audit services.' },
+    { id: 23, question: 'Job enrichment can be achieved by which two?', type: 'checkbox', options: ['Combine activities into more complex assignment', "Increase task ownership/autonomy", 'Job rotation', 'Job enlargement'], answer: [0, 1], explanation: 'Enrichment is vertical (depth/autonomy); rotation/enlargement are horizontal.' },
+    { id: 24, question: 'Competitive advantage from standardised components & flexible lines:', type: 'radio', options: ['Innovation', 'Alliance', 'Growth', 'Cost leadership'], answer: [3], explanation: 'Lower unit costs via scale/standardisation support cost leadership.' },
+    { id: 25, question: 'Essential appraisal interview skill:', type: 'radio', options: ['Fully involving the appraisee', 'Enhancing trust/support', 'Confronting poor performance', "Informing the appraisee of the organisation's strategy"], answer: [0], explanation: 'Active involvement ensures buy-in and development.' },
+    { id: 26, question: "Profitability falling, innovation rising across industry — which Porter force?", type: 'radio', options: ['Competitive rivalry', 'Bargaining power of buyers', 'Threat of new entrants'], answer: [0], explanation: 'High rivalry pushes prices down and innovation up.' },
+    { id: 27, question: "Porter value chain: manager in primary activity?", type: 'radio', options: ['Procurement', 'IT/Technology', 'Admin/Infrastructure', 'Service/After-sales'], answer: [3], explanation: 'Service is a primary activity; procurement/tech/admin are support.' },
+    { id: 28, question: 'High price inflation means:', type: 'radio', options: ['Debtors gain, creditors lose', 'Nobody loses', 'Debtors lose, creditors gain'], answer: [0], explanation: 'Inflation erodes the real value repaid to creditors; borrowers benefit.' },
+    { id: 29, question: 'Hofstede: society where people expected to stand for themselves/choose affiliations:', type: 'radio', options: ['Masculinity', 'Power distance', 'Individualism'], answer: [2], explanation: 'Describes individualist cultures.' },
+    { id: 30, question: 'Best skill set for a good chairperson:', type: 'radio', options: ['Understanding procedures, firmness, impartiality', 'Firmness, impartiality, ability to organise'], answer: [0], explanation: 'Must know rules, be firm, and stay impartial.' },
+    { id: 31, question: 'Consequences of failing to maintain adequate financial records:', type: 'checkbox', options: ['Fines', 'Prosecution', 'Damaged reputation', "Qualified auditor's report"], answer: [0, 1, 2, 3], explanation: 'Legal and reputational impacts plus potential audit qualification.' },
+    { id: 32, question: 'Function focused on raising cash and minimising finance costs:', type: 'radio', options: ['Financial management', 'Investment', 'Treasury'], answer: [2], explanation: 'Treasury manages funding/liquidity and related costs.' },
+    { id: 33, question: 'Imprest system is primarily used for:', type: 'radio', options: ['Wages', 'Petty cash', 'Bank and cash', 'Inventory'], answer: [1], explanation: 'Petty cash uses an imprest float replenished to a set level.' },
+    { id: 34, question: 'Purpose of perpetual inventory counts:', type: 'radio', options: ['Ensure year-end existence', 'Verify continuous accuracy of records', 'Identify teeming and lading', 'Reduce year-end count cost'], answer: [1], explanation: 'Perpetual counts reconcile records to physical stock continuously.' },
+    { id: 35, question: 'Most task-efficient Blake & Mouton styles (select two):', type: 'checkbox', options: ['Team (9,9)', 'Middle of the road', 'Country club', 'Authoritarian (9,1)'], answer: [0, 3], explanation: 'High task concern in Authoritarian (9,1) and also strong in Team (9,9).' },
+    { id: 36, question: 'Tax strategy using lower-cost location with incentives:', type: 'radio', options: ['Tax avoidance', 'Tax harmonisation', 'Tax evasion', 'Tax mitigation'], answer: [3], explanation: 'Using incentives/structures legally as intended is tax mitigation.' },
+    { id: 37, question: 'A system is a group of interacting, [1] or interdependent elements forming a [2] complex [3]...', type: 'radio', options: ['Interrelated, whole, procedures'], answer: [0], explanation: 'Definition: interacting/interrelated elements forming a complex whole.' },
+    { id: 38, question: 'Which most closely relates to marketing functions?', type: 'radio', options: ['Selling, marketing research, physical assets', 'Strategy, orientation, segmentation', 'Customer analysis, social responsibility, opportunity analysis'], answer: [1], explanation: 'Key marketing functions include strategy, market orientation, and segmentation.' },
+    { id: 39, question: 'Online booking affects which two marketing mix elements?', type: 'checkbox', options: ['Product', 'People', 'Place', 'Promotion'], answer: [1, 2], explanation: 'Changes distribution (place) and alters people interaction model.' },
+    { id: 40, question: 'Main parties to assurance on internal controls:', type: 'radio', options: ['Shareholders, directors, external auditors'], answer: [0], explanation: 'User = shareholders; responsible party = directors; practitioner = auditor.' },
+    { id: 41, question: "Kolb: doing homework after a lecture is which stage?", type: 'radio', options: ['Observation and reflection', 'Formation of abstract concepts', 'Applying/testing concepts learned'], answer: [2], explanation: 'Homework applies/experiments with the concepts.' },
+    { id: 42, question: 'Advantage of outsourcing internal audit:', type: 'radio', options: ['Management can focus on core activities', "Outsourced staff stay out of the way", 'Expectation gap narrows', 'Culture will be changed'], answer: [0], explanation: 'Outsourcing non-core work lets management focus on core.' },
+    { id: 43, question: 'Bennis: transactional leadership aligns with:', type: 'radio', options: ['Leaders do the right things', 'Managers manage', 'Leaders lead', 'Managers do things right'], answer: [3], explanation: 'Transactional = managers do things right; transformational leaders do the right things.' },
+    { id: 44, question: 'Cognitive bias where perception of one trait influences others:', type: 'radio', options: ['Halo effect'], answer: [0], explanation: 'The halo effect skews perception based on prior impressions.' },
+    { id: 45, question: 'Adair: setting objectives, planning, assigning responsibilities is which function?', type: 'radio', options: ['Task', 'Team', 'Individual'], answer: [0], explanation: 'These are task functions in Adair’s model.' },
+    { id: 46, question: 'Belbin role: intellectual, intuitive, unorthodox, detached:', type: 'radio', options: ['Finisher completer', 'Plant', 'Shaper'], answer: [1], explanation: 'Plant is the creative/idea generator, sometimes detached.' },
+    { id: 47, question: 'Management theories tasks (select all that apply).', type: 'checkbox', options: ['Taylor = Scientific/Timed; Mayo = Social needs; Drucker = Economic/self-managing; Fayol = Command/Unity', 'Drucker roles include developing people, measuring jobs, motivating employees, objective setting', 'Taylor focuses on self-actualisation', 'Leaders skip measurement'], answer: [0, 1], explanation: 'Taylor = scientific mgmt; Mayo = human relations; Fayol = POCCC; Drucker = MBO/people focus and roles listed.' },
+    { id: 48, question: 'Ethics: IESBA principles & approaches (select all that apply).', type: 'checkbox', options: ['IESBA principles: Integrity, Objectivity, Competence, Confidentiality, Professional Behaviour', 'David = Normative; Elena = Instrumentalist', 'Only integrity matters', 'Values are optional'], answer: [0, 1], explanation: 'IESBA principles list; normative vs instrumental approaches as given.' },
+    { id: 49, question: 'Demographics & development tasks (select all that apply).', type: 'checkbox', options: ['Northland=Pre-Industrial; Eastland=Early Developing; Westland=Developing; Southland=Fully Developed', 'Sustainability=Social; Age/Gender=Demographic; Income=Social; Location=Demographic', 'All countries are fully developed', 'Demographic factors equal social factors'], answer: [0, 1], explanation: 'Mappings follow the demographic transition model and factor classifications.' },
+    { id: 50, question: 'Organisational culture & hierarchy tasks.', type: 'checkbox', options: ['Handy mapping Power=D; Role=C; Task=B; Person=A and Anthony: Divisional objectives=Tactical; PEST=Strategic', 'Handy cultures are irrelevant', 'Anthony only covers operational level', 'Culture and hierarchy are unrelated'], answer: [0], explanation: 'Correct mapping of Handy cultures and Anthony hierarchy levels.' },
+    { id: 51, question: 'Support & mentoring tasks (select all that apply).', type: 'checkbox', options: ['Coaching = short-term/skills; Mentoring = career; Counselling = personal barriers; Mentor guides and values opinions', 'Counselling is for task skills', 'Mentor directs daily tasks'], answer: [0], explanation: 'Coaching/mentoring/counselling distinctions and mentor qualities as described.' },
+    { id: 52, question: 'Audit process tasks (select all that apply).', type: 'checkbox', options: ['Order: Agree terms > Understand entity > Assess risk > Tests > Management reps > Opinion; Compliance = control evidence; Substantive = figures/analysis', 'Testing comes before understanding the entity', 'Risk assessment can be skipped'], answer: [0], explanation: 'Standard audit cycle and distinction between compliance and substantive testing.' }
+  ]
+});
